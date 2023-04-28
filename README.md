@@ -3,15 +3,12 @@
 ### 来点好兄弟一起汉化(用爱发电全靠自觉)
 
 翻译相关：
-https://github.com/44451516/XIVSlothCombo/blob/cn/XIVSlothCombo/Combos/CustomComboPreset.cs
+https://github.com/44451516/XIVSlothCombo/blob/main/XIVSlothCombo/Combos/CustomComboPreset.cs
 
 部分UI：(替换文本)
-https://github.com/44451516/XIVSlothCombo/tree/cn/XIVSlothCombo/Window/Tabs
+https://github.com/44451516/XIVSlothCombo/tree/main/XIVSlothCombo/Window/Tabs
 
 如果有更好的方案欢迎提意见。
-### 使用：
-##  https://raw.githubusercontent.com/44451516/XIVSlothCombo/CN/release/pluginmaster.json
-##  https://raw.fastgit.org/44451516/XIVSlothCombo/CN/release/pluginmaster.json
 ---
 ## 快捷指令 [参考](https://docs.qq.com/doc/DT0tjZm9JTFlqUGJY)
 ~~~
