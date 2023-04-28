@@ -34,7 +34,14 @@ namespace XIVSlothCombo.Window.Tabs
             {
                 Util.OpenLink("https://github.com/Nik-Potokar/XIVSlothCombo/issues");
             }
+            if (ImGui.Button("想来汉化？点击这里"))
+            {
+                Util.OpenLink("https://github.com/44451516/XIVSlothCombo");
+            }
 
+            ImGui.TextColored(ImGuiColors.ParsedGreen, $"由于写的汉化脚本不算智能，部分区域未匹配到而没有汉化。");
+            ImGui.TextColored(ImGuiColors.ParsedGreen, $"如果你要是从某个咸鱼小铺买的，恭喜你，上大当了，请立刻退款差评免得被人嘲笑。");
+            ImGui.TextColored(ImGuiColors.ParsedGreen, $"温馨提醒：怂就别开，但开别怂，少开点挂。");
             ImGui.EndChild();
         }
     }

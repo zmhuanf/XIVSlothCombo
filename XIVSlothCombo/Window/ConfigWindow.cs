@@ -68,7 +68,7 @@ namespace XIVSlothCombo.Window
         }
 
         /// <summary> Initializes a new instance of the <see cref="ConfigWindow"/> class. </summary>
-        public ConfigWindow() : base("XIVSlothCombo Configuration", ImGuiWindowFlags.AlwaysAutoResize)
+        public ConfigWindow() : base("XIVSlothCombo 配置", ImGuiWindowFlags.AlwaysAutoResize)
         {
             RespectCloseHotkey = true;
 
@@ -89,36 +89,36 @@ namespace XIVSlothCombo.Window
                 return;
             }
 
-            if (ImGui.Begin("XIVSlothCombo Configuration", ref visible))
+            if (ImGui.Begin("XIVSlothCombo 配置", ref visible))
             {
                 if (ImGui.BeginTabBar("Config Tabs"))
                 {
-                    if (ImGui.BeginTabItem("PvE Features"))
+                    if (ImGui.BeginTabItem("PvE 功能"))
                     {
                         PvEFeatures.Draw();
                         ImGui.EndTabItem();
                     }
 
-                    if (ImGui.BeginTabItem("PvP Features"))
+                    if (ImGui.BeginTabItem("PvP 功能"))
                     {
                         PvPFeatures.Draw();
                         ImGui.EndTabItem();
                     }
 
-                    if (ImGui.BeginTabItem("Settings"))
+                    if (ImGui.BeginTabItem("综合设置"))
                     {
                         Settings.Draw();
                         ImGui.EndTabItem();
                     }
 
-                    if (ImGui.BeginTabItem("About XIVSlothCombo / Report an Issue"))
+                    if (ImGui.BeginTabItem("关于 XIVSlothCombo / 提出建议"))
                     {
                         AboutUs.Draw();
                         ImGui.EndTabItem();
                     }
 
 #if DEBUG
-                    if (ImGui.BeginTabItem("Debug Mode"))
+                    if (ImGui.BeginTabItem("Debug 调试模式"))
                     {
                         Debug.Draw();
                         ImGui.EndTabItem();
