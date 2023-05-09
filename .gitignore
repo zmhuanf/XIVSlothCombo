@@ -6,6 +6,6 @@ XIVSlothCombo/obj/
 XIVSlothCombo/bin/Debug/
 
 *.v2
+*.csproj
 
-
-.idea
+XIVSlothCombo/bin/Release/
