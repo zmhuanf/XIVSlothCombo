@@ -1088,44 +1088,44 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset is CustomComboPreset.AST_ST_DPS)
             {
-                UserConfig.DrawRadioButton(AST.Config.AST_DPS_AltMode, "On Malefic", "", 0);
-                UserConfig.DrawRadioButton(AST.Config.AST_DPS_AltMode, "On Combust", "Alternative DPS Mode. Leaves Malefic alone for pure DPS, becomes Malefic when features are on cooldown", 1);
+                UserConfig.DrawRadioButton(AST.Config.AST_DPS_AltMode, "凶星", "", 0);
+                UserConfig.DrawRadioButton(AST.Config.AST_DPS_AltMode, "烧灼", "可选dps模式. 留下凶星按键用于打dps， 其他特性冷却时也变为凶星", 1);
             }
 
             if (preset is CustomComboPreset.AST_DPS_Lucid)
-                UserConfig.DrawSliderInt(4000, 9500, AST.Config.AST_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, SliderIncrements.Hundreds);
+                UserConfig.DrawSliderInt(4000, 9500, AST.Config.AST_LucidDreaming, "当你的蓝量低于此值时会触发本特性", 150, SliderIncrements.Hundreds);
 
             if (preset is CustomComboPreset.AST_ST_DPS_CombustUptime)
             {
-                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_CombustOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_CombustOption, "当敌人HP百分比低于此设置值时停止使用. 如果想要忽略这个检测，设置为0.");
 
-                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_DPS_CombustUptime_Adv, "Advanced Options", "", isConditionalChoice: true);
-                if (PluginConfiguration.GetCustomBoolValue(AST.Config.AST_ST_DPS_CombustUptime_Adv))
+                UserConfig.DrawAdditionalBoolChoice(nameof(AST.Config.AST_ST_DPS_CombustUptime_Adv), "高级选项", "", isConditionalChoice: true);
+                if (PluginConfiguration.GetCustomBoolValue(nameof(AST.Config.AST_ST_DPS_CombustUptime_Adv)))
                 {
                     ImGui.Indent();
-                    UserConfig.DrawRoundedSliderFloat(0, 4, AST.Config.AST_ST_DPS_CombustUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+                    UserConfig.DrawRoundedSliderFloat(0, 4, nameof(AST.Config.AST_ST_DPS_CombustUptime_Threshold), "DOT刷新检测秒数（低于此时间就尝试刷新）. 如果想要忽略这个检测，设置为0.", digits: 1);
                     ImGui.Unindent();
                 }
 
             }
 
             if (preset is CustomComboPreset.AST_DPS_Divination)
-                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_DivinationOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_DivinationOption, "当敌人HP百分比低于此设置值时停止使用. 如果想要忽略这个检测，设置为0.");
 
             if (preset is CustomComboPreset.AST_DPS_LightSpeed)
-                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_LightSpeedOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                UserConfig.DrawSliderInt(0, 100, AST.Config.AST_DPS_LightSpeedOption, "当敌人HP百分比低于此设置值时停止使用. 如果想要忽略这个检测，设置为0.");
 
 
             if (preset is CustomComboPreset.AST_ST_SimpleHeals)
             {
-                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_Adv, "Advanced Options", "", isConditionalChoice: true);
+                UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_Adv, "高级选项", "", isConditionalChoice: true);
                 if (AST.Config.AST_ST_SimpleHeals_Adv)
                 {
                     ImGui.Indent(); ImGui.Spacing();
                     UserConfig.DrawAdditionalBoolChoice(AST.Config.AST_ST_SimpleHeals_UIMouseOver,
-                        "Party UI Mouseover Checking",
-                        "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                        "To be used in conjunction with Redirect/Reaction/etc");
+                        "队伍UI鼠标悬停检测",
+                        "检测团队成员生命值和Buff，通过将鼠标悬停于小队列表.\n" +
+                        "这个功能是用来和Redirect/Reaction/etc结合使用的.（译者注：这三个好像是鼠标悬停施法插件。）");
                     ImGui.Unindent();
                 }
             }
@@ -1157,13 +1157,13 @@ namespace XIVSlothCombo.Window.Functions
             #region BLACK MAGE
 
             if (preset == CustomComboPreset.BLM_AoE_Simple_Foul)
-                UserConfig.DrawSliderInt(0, 2, BLM.Config.BLM_PolyglotsStored, "Number of Polyglot charges to store.\n(2 = Only use Polyglot with Manafont)");
+                UserConfig.DrawSliderInt(0, 2, BLM.Config.BLM_PolyglotsStored, "存几层通晓.\n(2 = 只在魔泉下使用通晓)");
 
             if (preset is CustomComboPreset.BLM_SimpleMode or CustomComboPreset.BLM_Simple_Transpose)
-                UserConfig.DrawRoundedSliderFloat(3.0f, 8.0f, BLM.Config.BLM_AstralFireRefresh, "Seconds before refreshing Astral Fire.\n(6s = Recommended)");
+                UserConfig.DrawRoundedSliderFloat(3.0f, 8.0f, BLM.Config.BLM_AstralFireRefresh, "星极火刷新时间.\n(6s = 推荐)");
 
             if (preset == CustomComboPreset.BLM_Simple_CastMovement)
-                UserConfig.DrawRoundedSliderFloat(0.0f, 1.0f, BLM.Config.BLM_MovementTime, "Seconds of movement before using the movement feature.");
+                UserConfig.DrawRoundedSliderFloat(0.0f, 1.0f, BLM.Config.BLM_MovementTime, "走了多久（秒）后应用此移动特性.（例如：设置成1就是持续走动1秒后才会把读条技能替换成即刻/崩溃）");
 
             if (preset == CustomComboPreset.BLM_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, BLM.Config.BLM_VariantCure, "HP% to be at or under", 200);
@@ -1177,10 +1177,10 @@ namespace XIVSlothCombo.Window.Functions
             #region BARD
 
             if (preset == CustomComboPreset.BRD_Simple_RagingJaws)
-                UserConfig.DrawSliderInt(3, 5, BRD.Config.BRD_RagingJawsRenewTime, "Remaining time (In seconds)");
+                UserConfig.DrawSliderInt(3, 5, BRD.Config.BRD_RagingJawsRenewTime, "持续时间 (单位：秒)");
 
             if (preset == CustomComboPreset.BRD_Simple_NoWaste)
-                UserConfig.DrawSliderInt(1, 10, BRD.Config.BRD_NoWasteHPPercentage, "Remaining target HP percentage");
+                UserConfig.DrawSliderInt(1, 10, BRD.Config.BRD_NoWasteHPPercentage, "目标血量百分比");
 
             if (preset == CustomComboPreset.BRD_ST_SecondWind)
                 UserConfig.DrawSliderInt(0, 100, BRD.Config.BRD_STSecondWindThreshold, "HP percent threshold to use Second Wind below.", 150, SliderIncrements.Ones);
@@ -1200,10 +1200,10 @@ namespace XIVSlothCombo.Window.Functions
                 int[]? actions = Service.Configuration.DancerDanceCompatActionIDs.Cast<int>().ToArray();
                 bool inputChanged = false;
 
-                inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0);
-                inputChanged |= ImGui.InputInt("Entrechat (Blue) ActionID", ref actions[1], 0);
-                inputChanged |= ImGui.InputInt("Jete (Green) ActionID", ref actions[2], 0);
-                inputChanged |= ImGui.InputInt("Pirouette (Yellow) ActionID", ref actions[3], 0);
+                inputChanged |= ImGui.InputInt("Emboite (图标红那个) 的技能ID", ref actions[0], 0);
+                inputChanged |= ImGui.InputInt("Entrechat (图标蓝那个) 的技能ID", ref actions[1], 0);
+                inputChanged |= ImGui.InputInt("Jete (图标绿那个) 的技能ID", ref actions[2], 0);
+                inputChanged |= ImGui.InputInt("Pirouette (图标黄那个) 的技能ID", ref actions[3], 0);
 
                 if (inputChanged)
                 {
@@ -1215,10 +1215,10 @@ namespace XIVSlothCombo.Window.Functions
             }
 
             if (preset == CustomComboPreset.DNC_ST_EspritOvercap)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_ST, "Esprit", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_ST, "伶俐", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DNC_AoE_EspritOvercap)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_AoE, "Esprit", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCEspritThreshold_AoE, "伶俐", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DNC_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, DNC.Config.DNCVariantCurePercent, "HP% to be at or under", 200);
@@ -1226,41 +1226,41 @@ namespace XIVSlothCombo.Window.Functions
             #region Simple ST Sliders
 
             if (preset == CustomComboPreset.DNC_ST_Simple_SS)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleSSBurstPercent, "Target HP% to stop using Standard Step below", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleSSBurstPercent, "目标生命值百分比低于此值不再使用标准舞步", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_ST_Simple_TS)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleTSBurstPercent, "Target HP% to stop using Technical Step below", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleTSBurstPercent, "目标生命值百分比低于此值不再使用技巧舞步", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_ST_Simple_Feathers)
-                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleFeatherBurstPercent, "Target HP% to dump all pooled feathers below", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 5, DNC.Config.DNCSimpleFeatherBurstPercent, "目标生命值百分比低于此值打出全部下面囤积的技能", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_ST_Simple_SaberDance)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleSaberThreshold, "Esprit", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleSaberThreshold, "伶俐", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DNC_ST_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWaltzPercent, "Curing Waltz HP%", 200, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWaltzPercent, "使用治疗华尔兹的生命值百分比临界点", 200, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_ST_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWindPercent, "Second Wind HP%", 200, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimplePanicHealWindPercent, "使用内丹的生命值百分比临界点", 200, SliderIncrements.Ones);
 
             #endregion
 
             #region Simple AoE Sliders
 
             if (preset == CustomComboPreset.DNC_AoE_Simple_SS)
-                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleSSAoEBurstPercent, "Target HP% to stop using Standard Step below", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleSSAoEBurstPercent, "目标生命值百分比低于此值不再使用标准舞步", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_AoE_Simple_TS)
-                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleTSAoEBurstPercent, "Target HP% to stop using Technical Step below", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 10, DNC.Config.DNCSimpleTSAoEBurstPercent, "目标生命值百分比低于此值不再使用技巧舞步", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_AoE_Simple_SaberDance)
-                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleAoESaberThreshold, "Esprit", 150, SliderIncrements.Fives);
+                UserConfig.DrawSliderInt(50, 100, DNC.Config.DNCSimpleAoESaberThreshold, "伶俐", 150, SliderIncrements.Fives);
 
             if (preset == CustomComboPreset.DNC_AoE_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWaltzPercent, "Curing Waltz HP%", 200, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWaltzPercent, "使用治疗华尔兹的生命值百分比临界点", 200, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DNC_AoE_Simple_PanicHeals)
-                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWindPercent, "Second Wind HP%", 200, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DNC.Config.DNCSimpleAoEPanicHealWindPercent, "使用内丹的生命值百分比临界点", 200, SliderIncrements.Ones);
 
             #endregion
 
@@ -1276,10 +1276,10 @@ namespace XIVSlothCombo.Window.Functions
             #region DARK KNIGHT
 
             if (preset == CustomComboPreset.DRK_EoSPooling && enabled)
-                UserConfig.DrawSliderInt(0, 3000, DRK.Config.DRK_MPManagement, "How much MP to save (0 = Use All)", 150, SliderIncrements.Thousands);
+                UserConfig.DrawSliderInt(0, 3000, DRK.Config.DRK_MPManagement, "保留多少MP (0 = 全部使用)", 150, SliderIncrements.Thousands);
 
             if (preset == CustomComboPreset.DRK_Plunge && enabled)
-                UserConfig.DrawSliderInt(0, 1, DRK.Config.DRK_KeepPlungeCharges, "How many charges to keep ready? (0 = Use All)", 75, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 1, DRK.Config.DRK_KeepPlungeCharges, "留几层充能? (0 = 用光，一层不留)", 75, SliderIncrements.Ones);
 
             if (preset == CustomComboPreset.DRKPvP_Burst)
                 UserConfig.DrawSliderInt(1, 100, DRKPvP.Config.ShadowbringerThreshold, "HP% to be at or above to use Shadowbringer");
@@ -1292,34 +1292,35 @@ namespace XIVSlothCombo.Window.Functions
             #region DRAGOON
             if (preset == CustomComboPreset.DRG_ST_Dives && enabled)
             {
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "On Cooldown", "Single Weave friendly. Uses skills on cooldown.", 1);
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "Under Battle Litany and Life of the Dragon", "Requires Double Weaving. Uses Spineshatter Dive and Dragonfire Dive under Battle Litany and Life of the Dragon, and Stardiver under Life of the Dragon.", 2);
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "Under Lance Charge", "Single Weave friendly. Uses Spineshatter Dive and Dragonfire Dive under Lance Charge, and Stardiver under Life of the Dragon.", 3);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "冷却好了用", "单插友好. 冷却好了使用.", 1);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "战斗连倒和红莲龙血下用", "需要双插. 破碎冲龙炎冲在战斗连倒和红莲龙血下用, 坠星冲在红莲龙血下用.", 2);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_ST_DiveOptions, "配合猛枪使用", "单插友好. 配合猛枪使用破碎冲龙炎冲, 红莲龙血下的坠星冲.", 3); 
             }
+
 
             if (preset == CustomComboPreset.DRG_AoE_Dives && enabled)
             {
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "On Cooldown", "Single Weave friendly. Uses skills on cooldown.", 1);
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "Under Battle Litany and Life of the Dragon", "Requires Double Weaving. Uses Spineshatter Dive and Dragonfire Dive under Battle Litany and Life of the Dragon, and Stardiver under Life of the Dragon.", 2);
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "Under Lance Charge", "Single Weave friendly. Uses Spineshatter Dive and Dragonfire Dive under Lance Charge, and Stardiver under Life of the Dragon.", 3);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "冷却好了用", "单插友好. 冷却好了使用.", 1);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "战斗连倒和红莲龙血下用", "需要双插. 破碎冲龙炎冲在战斗连倒和红莲龙血下用, 坠星冲在红莲龙血下用.", 2);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_AOE_DiveOptions, "配合猛枪使用", "单插友好. 配合猛枪使用破碎冲龙炎冲, 红莲龙血下的坠星冲.", 3);
             }
 
             if (preset == CustomComboPreset.DRG_ST_Opener && enabled)
             {
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_OpenerOptions, "Standard Opener", "Uses the Standard Tincture Opener.", 1);
-                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_OpenerOptions, "Low Ping Opener", "Uses the Low Ping Opener. Use Lance Charge after True Thrust for the No Tincture opener.", 2);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_OpenerOptions, "标准开场起手", "使用标准起手（自己吃爆发药）", 1);
+                UserConfig.DrawHorizontalRadioButton(DRG.Config.DRG_OpenerOptions, "低Ping开场起手", "低延迟下的起手. 第一个直刺连中开猛枪的不吃药开场起手.", 2);                
             }
 
             if (preset == CustomComboPreset.DRG_ST_ComboHeals)
             {
-                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_STSecondWindThreshold, "Second Wind HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
-                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_STBloodbathThreshold, "Bloodbath HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_STSecondWindThreshold, "使用内丹的生命值百分比临界点 (0 = 禁用)", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_STBloodbathThreshold, "使用浴血的生命值百分比临界点 (0 = 禁用)", 150, SliderIncrements.Ones);
             }
 
             if (preset == CustomComboPreset.DRG_AoE_ComboHeals)
             {
-                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_AoESecondWindThreshold, "Second Wind HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
-                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_AoEBloodbathThreshold, "Bloodbath HP percentage threshold (0 = Disabled)", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_AoESecondWindThreshold, "使用内丹的生命值百分比临界点 (0 = 禁用)", 150, SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 100, DRG.Config.DRG_AoEBloodbathThreshold, "使用浴血的生命值百分比临界点 (0 = 禁用)", 150, SliderIncrements.Ones);
             }
 
             if (preset == CustomComboPreset.DRG_Variant_Cure)
@@ -1345,12 +1346,12 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.GNB_ST_SkSSupport && enabled)
             {
-                UserConfig.DrawHorizontalRadioButton(GNB.Config.GNB_SkS, "< 2.45", "Options are friendly for skill speeds of 2.45 and lower.", 1);
-                UserConfig.DrawHorizontalRadioButton(GNB.Config.GNB_SkS, "2.5", "Options are friendly for 2.5 skill speed.", 2);
+                UserConfig.DrawHorizontalRadioButton(GNB.Config.GNB_SkS, "< 2.45", "适合2.45或更小的技速.", 1);
+                UserConfig.DrawHorizontalRadioButton(GNB.Config.GNB_SkS, "2.5", "适合2.5技速.", 2);
             }
 
             if (preset == CustomComboPreset.GNB_ST_RoughDivide && enabled)
-                UserConfig.DrawSliderInt(0, 1, GNB.Config.GNB_RoughDivide_HeldCharges, "How many charges to keep ready? (0 = Use All)");
+                UserConfig.DrawSliderInt(0, 1, GNB.Config.GNB_RoughDivide_HeldCharges, "准备保留几层充能? (0 = 用光，一层不留)");
 
             if (preset == CustomComboPreset.GNB_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, GNB.Config.GNB_VariantCure, "HP% to be at or under", 200);
@@ -1778,10 +1779,9 @@ namespace XIVSlothCombo.Window.Functions
             #region SAMURAI
 
             if (preset == CustomComboPreset.SAM_ST_Overcap && enabled)
-                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_ST_KenkiOvercapAmount, "Set the Kenki overcap amount for ST combos.");
-
+                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_ST_KenkiOvercapAmount, "设置单体连击剑气积累数量.");
             if (preset == CustomComboPreset.SAM_AoE_Overcap && enabled)
-                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_AoE_KenkiOvercapAmount, "Set the Kenki overcap amount for AOE combos.");
+                UserConfig.DrawSliderInt(0, 85, SAM.Config.SAM_AoE_KenkiOvercapAmount, "设置AOE连击剑气积累数量.");
 
             if (preset == CustomComboPreset.SAM_ST_GekkoCombo_CDs_MeikyoShisui && enabled)
             {
@@ -1791,10 +1791,10 @@ namespace XIVSlothCombo.Window.Functions
 
             //PvP
             if (preset == CustomComboPreset.SAMPvP_BurstMode && enabled)
-                UserConfig.DrawSliderInt(0, 2, SAMPvP.Config.SAMPvP_SotenCharges, "How many charges of Soten to keep ready? (0 = Use All).");
+                UserConfig.DrawSliderInt(0, 2, SAMPvP.Config.SAMPvP_SotenCharges, "存几层必杀剑·早天? (0 = 全用，一层不留).");
 
             if (preset == CustomComboPreset.SAMPvP_KashaFeatures_GapCloser && enabled)
-                UserConfig.DrawSliderInt(0, 100, SAMPvP.Config.SAMPvP_SotenHP, "Use Soten on enemies below selected HP.");
+                UserConfig.DrawSliderInt(0, 100, SAMPvP.Config.SAMPvP_SotenHP, "使用必杀剑·早天当敌人低于设置的血量.");
 
             //Fillers
             if (preset == CustomComboPreset.SAM_ST_GekkoCombo_FillerCombos)
@@ -1964,8 +1964,8 @@ namespace XIVSlothCombo.Window.Functions
             #region PvE
             if (preset == CustomComboPreset.SMN_DemiEgiMenu_EgiOrder)
             {
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_PrimalChoice, "Titan first", "Summons Titan, Garuda then Ifrit.", 1);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_PrimalChoice, "Garuda first", "Summons Garuda, Titan then Ifrit.", 2);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_PrimalChoice, "先招泰坦（土）", "按泰坦，迦楼罗，伊芙利特的顺序召唤", 1);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_PrimalChoice, "先招迦楼罗（风）", "按迦楼罗，泰坦，伊芙利特的顺序召唤.", 2);
             }
 
             if (preset == CustomComboPreset.SMN_DemiEgiMenu_oGCDPooling)
@@ -1973,21 +1973,21 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.SMN_DemiEgiMenu_oGCDPooling)
             {
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "Bahamut", "Bursts during Bahamut phase.", 1);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "Phoenix", "Bursts during Phoenix phase.", 2);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "Bahamut or Phoenix", "Bursts during Bahamut or Phoenix phase (whichever comes first).", 3);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "Flexible (SpS) Option", "Bursts when Searing Light is ready, regardless of phase.", 4);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "巴哈姆特", "巴哈阶段爆发.", 1);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "菲尼克斯", "凤凰阶段爆发.", 2);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "巴哈姆特或菲尼克斯", "巴哈或凤凰阶段爆发 (取决于那个先到).", 3);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_BurstPhase, "灵活 (SpS) ", "当灼热之光时爆发, 而不管处在哪个阶段.", 4);
             }
 
             if (preset == CustomComboPreset.SMN_DemiEgiMenu_SwiftcastEgi)
             {
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "Garuda", "Swiftcasts Slipstream", 1);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "Ifrit", "Swiftcasts Ruby Ruin/Ruby Rite", 2);
-                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "Flexible (SpS) Option", "Swiftcasts the first available Egi when Swiftcast is ready.", 3);
-            }
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "迦楼罗", "即刻用来使用螺旋气流", 1);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "伊芙利特", "即刻用来使用红宝石之仪", 2);
+                UserConfig.DrawHorizontalRadioButton(SMN.Config.SMN_SwiftcastPhase, "灵活 (SpS) ", "当即刻可用，用来使用第一个能用的灵攻技能.", 3); } 
+            
 
             if (preset == CustomComboPreset.SMN_Lucid)
-                UserConfig.DrawSliderInt(4000, 9500, SMN.Config.SMN_Lucid, "Set value for your MP to be at or under for this feature to take effect.", 150, SliderIncrements.Hundreds);
+                UserConfig.DrawSliderInt(4000, 9500, SMN.Config.SMN_Lucid, "MP小于等于此值时使用.", 150, SliderIncrements.Hundreds);
 
             if (preset == CustomComboPreset.SMN_Variant_Cure)
                 UserConfig.DrawSliderInt(1, 100, SMN.Config.SMN_VariantCure, "HP% to be at or under", 200);
@@ -2074,7 +2074,7 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region PvP VALUES
 
-            PlayerCharacter? pc = Service.ClientState.LocalPlayer;
+             PlayerCharacter? pc = Service.ClientState.LocalPlayer;
 
             if (preset == CustomComboPreset.PvP_EmergencyHeals)
             {
@@ -2087,30 +2087,30 @@ namespace XIVSlothCombo.Window.Functions
                         int setting = PluginConfiguration.GetCustomIntValue(PvPCommon.Config.EmergencyHealThreshold);
                         float hpThreshold = (float)maxHP / 100 * setting;
 
-                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, $"Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.\nHP Value to be at or under: {hpThreshold}");
+                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, $"设置百分比数值，低于等于时发挥本功能效果.\n为了防止满血使用浪费。100%指的是你的血量上限-15000.\n生命值低于或等于: {hpThreshold}");
                     }
 
                     else
                     {
-                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.");
+                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "设置百分比数值，低于等于时发挥本功能效果.\n为了防止满血使用浪费。100%指的是你的血量上限-15000.");
                     }
                 }
 
                 else
                 {
-                    UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.");
+                    UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "设置百分比数值，低于等于时发挥本功能效果.\n为了防止满血使用浪费。100%指的是你的血量上限-15000.");
                 }
             }
 
             if (preset == CustomComboPreset.PvP_EmergencyGuard)
-                UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyGuardThreshold, "Set the percentage to be at or under for the feature to kick in.");
+                UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyGuardThreshold, "设置百分比数值，低于等于时发挥本功能效果.");
 
             if (preset == CustomComboPreset.PvP_QuickPurify)
                 UserConfig.DrawPvPStatusMultiChoice(PvPCommon.Config.QuickPurifyStatuses);
 
             if (preset == CustomComboPreset.NINPvP_ST_Meisui)
             {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
+                string description = "设置百分比数值，低于等于时发挥本功能效果.\n为了防止满血使用浪费。100%指的是你的血量上限-8000.";
 
                 if (pc != null)
                 {
@@ -2120,7 +2120,7 @@ namespace XIVSlothCombo.Window.Functions
                         int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_ST);
                         float hpThreshold = (float)maxHP / 100 * setting;
 
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
+                        description += $"\n生命值低于或等于: {hpThreshold}";
                     }
                 }
 
@@ -2129,7 +2129,7 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.NINPvP_AoE_Meisui)
             {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
+                string description = "设置百分比数值，低于等于时发挥本功能效果.\n为了防止满血使用浪费。100%指的是你的血量上限-8000.";
 
                 if (pc != null)
                 {
@@ -2139,7 +2139,7 @@ namespace XIVSlothCombo.Window.Functions
                         int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_AoE);
                         float hpThreshold = (float)maxHP / 100 * setting;
 
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
+                        description += $"\n生命值低于或等于: {hpThreshold}";
                     }
                 }
 

@@ -144,6 +144,20 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.BeginTooltip();
                 ImGui.TextUnformatted($"Used for {CustomComboInfoAttribute.JobIDToName(33)} card targeting features.\r\nSet Alpha to 0 to hide the box.");
             }
+            
+            #region 输出到聊天框
+
+            
+            var setOutChat = Service.Configuration.SetOutChat;
+
+            //if (ImGui.Checkbox("Hide Message of the Day", ref motd))
+            if (ImGui.Checkbox("" + "Set输出到聊天" + "", ref setOutChat))
+            {
+                Service.Configuration.SetOutChat = setOutChat;
+                Service.Configuration.Save();
+            }
+
+            #endregion
             ImGui.EndChild();
         }
     }
