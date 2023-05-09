@@ -118,7 +118,8 @@ namespace XIVSlothCombo.Combos.PvE
                                 {
                                     if (IsEnabled(CustomComboPreset.DRK_BloodWeapon) && IsOffCooldown(BloodWeapon) && LevelChecked(BloodWeapon))
                                         return BloodWeapon;
-                                    if (IsEnabled(CustomComboPreset.DRK_Delirium) && IsOffCooldown(Delirium) && LevelChecked(Delirium))
+                                    
+                                    if (IsEnabled(CustomComboPreset.DRK_Delirium) && IsOffCooldown(Delirium) && LevelChecked(Delirium)&& (gauge.Blood < 70 || GetBuffStacks(Buffs.BloodWeapon) < 0))
                                         return Delirium;
                                 }
 
@@ -156,6 +157,28 @@ namespace XIVSlothCombo.Combos.PvE
                         //Delirium Features
                         if (LevelChecked(Delirium) && IsEnabled(CustomComboPreset.DRK_Bloodspiller) && IsEnabled(CustomComboPreset.DRK_MainComboCDs_Group))
                         {
+                            
+                            //·ÀÖ¹°µÑªÒç³ö
+                            if (gauge.Blood >= 70 && GetBuffStacks(Buffs.BloodWeapon) > 0)
+                            {
+                                return Bloodspiller;
+                            } 
+                            
+                            if (gauge.Blood >= 70 && GetCooldownRemainingTime(BloodWeapon) is > 0 and < 5)
+                            {
+                                return Bloodspiller;
+                            } 
+                            
+                            if (gauge.Blood >= 70 && IsOffCooldown(BloodWeapon))
+                            {
+                                return Bloodspiller;
+                            } 
+                            
+                            
+                            //·ÀÖ¹Ñª½¦Ã»ÓÐ´òÍê
+                            if (GetBuffStacks(Buffs.Delirium) > 0 && GetBuffRemainingTime(Buffs.Delirium) is > 0 and < 7.5f)
+                                return Bloodspiller;
+                            
                             //Regular Delirium
                             if (GetBuffStacks(Buffs.Delirium) > 0 && IsNotEnabled(CustomComboPreset.DRK_DelayedBloodspiller))
                                 return Bloodspiller;
@@ -165,8 +188,12 @@ namespace XIVSlothCombo.Combos.PvE
                                 return Bloodspiller;
 
                             //Blood management before Delirium
-                            if (IsEnabled(CustomComboPreset.DRK_Delirium) &&
-                                ((gauge.Blood >= 60 && GetCooldownRemainingTime(BloodWeapon) is > 0 and < 3) || (gauge.Blood >= 50 && GetCooldownRemainingTime(Delirium) > 37 && !HasEffect(Buffs.Delirium))))
+                            
+                            if (IsEnabled(CustomComboPreset.DRK_Delirium) && ((gauge.Blood >= 60 && GetCooldownRemainingTime(BloodWeapon) is > 0 and < 4.9f) ))
+
+                            //
+                            // if (IsEnabled(CustomComboPreset.DRK_Delirium) &&
+                            //     ((gauge.Blood >= 60 && GetCooldownRemainingTime(BloodWeapon) is > 0 and < 3) || (gauge.Blood >= 50 && GetCooldownRemainingTime(Delirium) > 37 && !HasEffect(Buffs.Delirium))))
                                 return Bloodspiller;
                         }
 
