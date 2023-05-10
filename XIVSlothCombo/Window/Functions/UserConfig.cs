@@ -1477,17 +1477,17 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.PLD_Requiescat_Options)
             {
-                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Confiteor", "", 1);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Blades of Faith/Truth/Valor", "", 2);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Confiteor & Blades of Faith/Truth/Valor", "", 3);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Holy Spirit", "", 4);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Holy Circle", "", 5);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "悔罪", "", 1);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "Blades of 信仰/真理/英勇", "", 2);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "悔罪 & Blades of 信仰/真理/英勇", "", 3);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "圣灵", "", 4);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "圣环", "", 5);
             }
 
             if (preset == CustomComboPreset.PLD_SpiritsWithin)
             {
-                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize Circle of Scorn", "", 1);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize Spirits Within / Expiacion", "", 2);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize 厄运流转", "", 1);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize 深奥之类 / 深奥之类", "", 2);
             }
 
             if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron || preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)

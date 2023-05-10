@@ -2081,111 +2081,111 @@ namespace XIVSlothCombo.Combos
 
         [ConflictingCombos(PLD_ST_AdvancedMode)]
         [ReplaceSkill(PLD.FastBlade)]
-        [CustomComboInfo("下忍模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
+        [CustomComboInfo("骑士高级模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
         PLD_ST_SimpleMode = 11000,
 
         [ConflictingCombos(PLD_AoE_AdvancedMode)]
         [ReplaceSkill(PLD.TotalEclipse)]
-        [CustomComboInfo("下忍模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
+        [CustomComboInfo("骑士高级模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
         PLD_AoE_SimpleMode = 11001,
 
         [ConflictingCombos(PLD_ST_SimpleMode)]
         [ReplaceSkill(PLD.FastBlade)]
-        [CustomComboInfo("上忍模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
+        [CustomComboInfo("骑士简单模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
         PLD_ST_AdvancedMode = 11002,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Fight or Flight Option", "Adds 战逃反应 to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("战逃反应 Option", "Adds 战逃反应 to Advanced Mode.", PLD.JobID)]
         PLD_ST_AdvancedMode_FoF = 11003,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Shield Lob Option", "Adds Shield Lob to Advanced Mode if out of range.", PLD.JobID)]
+        [CustomComboInfo("投盾 Option", "Adds 投盾 to Advanced Mode if out of range.", PLD.JobID)]
         PLD_ST_AdvancedMode_ShieldLob = 11004,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Circle of Scorn Option", "Adds Circle of Scorn to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("厄运流转 Option", "Adds 厄运流转 to Advanced Mode.", PLD.JobID)]
         PLD_ST_AdvancedMode_CircleOfScorn = 11005,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Spirits Within / Expiacion Option", "Adds Spirits Within / Expiacion to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("深奥之灵 / 偿赎剑 Option", "Adds 深奥之灵 / 偿赎剑 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_SpiritsWithin = 11006,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Sheltron / Holy Sheltron Option", "Adds Sheltron / Holy Sheltron to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("盾阵 / 圣盾阵 Option", "Adds 盾阵 / 圣盾阵 Sheltron to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Sheltron = 11007,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Goring Blade Option", "Adds Goring Blade to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("沥血剑 Option", "Adds 沥血剑 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_GoringBlade = 11008,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Holy Spirit Option", "Adds Holy Spirit to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("圣环 Option", "Adds 圣环 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_HolySpirit = 11009,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("安魂祈祷 Option", "Adds 安魂祈祷 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Requiescat = 11010,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("调停选项", "Adds Intervene to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("调停 Option", "Adds 调停 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Intervene = 11011,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Atonement Option", "Adds Atonement to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("恕罪剑 Option", "Adds 恕罪剑 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Atonement = 11012,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Confiteor Option", "Adds Confiteor to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("悔罪 Option", "Adds 悔罪 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Confiteor = 11013,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("Blades of Faith/Truth/Valor Option", "Adds Blades of Faith/Truth/Valor to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("Blades of 信仰/真理/英勇 Option", "Adds Blades of 信仰/真理/英勇 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_Blades = 11014,
 
         [ConflictingCombos(PLD_AoE_SimpleMode)]
         [ReplaceSkill(PLD.TotalEclipse)]
-        [CustomComboInfo("上忍模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
+        [CustomComboInfo("骑士简单模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
         PLD_AoE_AdvancedMode = 11015,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Fight or Flight Option", "Adds 战逃反应 to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("战逃反应 AOE Option", "Adds 战逃反应 to Advanced Mode.", PLD.JobID)]
         PLD_AoE_AdvancedMode_FoF = 11016,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Spirits Within / Expiacion Option", "Adds Spirits Within / Expiacion to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("Spirits 深奥之灵 AOE Option", "Adds 深奥之灵 to Advanced Mode", PLD.JobID)]
         PLD_AoE_AdvancedMode_SpiritsWithin = 11017,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Circle of Scorn Option", "Adds Circle of Scorn to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("厄运流转 AOE Option", "Adds 厄运流转 to Advanced Mode.", PLD.JobID)]
         PLD_AoE_AdvancedMode_CircleOfScorn = 11018,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("安魂祈祷 AOE Option", "Adds 安魂祈祷 to Advanced Mode.", PLD.JobID)]
         PLD_AoE_AdvancedMode_Requiescat = 11019,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Holy Circle Option", "Adds Holy Circle to Advanced Mode.", PLD.JobID)]
+        [CustomComboInfo("圣环 AOE Option", "Adds 圣环 to Advanced Mode.", PLD.JobID)]
         PLD_AoE_AdvancedMode_HolyCircle = 11020,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Confiteor Option", "Adds Confiteor to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("悔罪 AOE Option", "Adds 悔罪 to Advanced Mode", PLD.JobID)]
         PLD_AoE_AdvancedMode_Confiteor = 11021,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Blades of Faith/Truth/Valor Option", "Adds Blades of Faith/Truth/Valor to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("Blades of 信仰/真理/英勇 AOE Option", "Adds Blades of 信仰/真理/英勇 to Advanced Mode", PLD.JobID)]
         PLD_AoE_AdvancedMode_Blades = 11022,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
-        [CustomComboInfo("Sheltron / Holy Sheltron Option", "Adds Sheltron / Holy Sheltron to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("盾阵 / 圣盾阵 AOE Option", "Adds 盾阵 / 圣盾阵 to Advanced Mode", PLD.JobID)]
         PLD_AoE_AdvancedMode_Sheltron = 11023,
 
 
         [ReplaceSkill(PLD.Requiescat)]
-        [CustomComboInfo("Requiescat Spender Option", "Replaces Requiescat with the selected option while having stacks of \"Requiescat\"", PLD.JobID)]
+        [CustomComboInfo("安魂祈祷 Spender Option", "Replaces 安魂祈祷 with the selected option while having stacks of \"Requiescat\"", PLD.JobID)]
         PLD_Requiescat_Options = 11024,
 
         [ReplaceSkill(PLD.SpiritsWithin, PLD.Expiacion)]
-        [CustomComboInfo("Spirits Within / Expiacion / Circle of Scorn Feature", "Replaces Spirits Within / Expiacion with Circle of Scorn when off cooldown.", PLD.JobID)]
+        [CustomComboInfo("深奥之灵 / 偿赎剑 / 厄运流转 Feature", "Replaces 深奥之灵 / 偿赎剑 with 厄运流转 when off cooldown.", PLD.JobID)]
         PLD_SpiritsWithin = 11025,
 
         [Variant]
