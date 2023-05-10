@@ -1486,8 +1486,8 @@ namespace XIVSlothCombo.Window.Functions
 
             if (preset == CustomComboPreset.PLD_SpiritsWithin)
             {
-                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize 厄运流转", "", 1);
-                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "Prioritize 深奥之类 / 深奥之类", "", 2);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "优先 厄运流转", "", 1);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_SpiritsWithinOption, "优先 深奥之灵/偿赎剑", "", 2);
             }
 
             if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Sheltron || preset == CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron)

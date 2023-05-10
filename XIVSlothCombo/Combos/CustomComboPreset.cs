@@ -2081,17 +2081,17 @@ namespace XIVSlothCombo.Combos
 
         [ConflictingCombos(PLD_ST_AdvancedMode)]
         [ReplaceSkill(PLD.FastBlade)]
-        [CustomComboInfo("骑士高级模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
+        [CustomComboInfo("骑士简单模式 - 单目标", $"一键输出(先锋剑)", PLD.JobID)]
         PLD_ST_SimpleMode = 11000,
 
         [ConflictingCombos(PLD_AoE_AdvancedMode)]
         [ReplaceSkill(PLD.TotalEclipse)]
-        [CustomComboInfo("骑士高级模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThis is ideal for newcomers to the job.", PLD.JobID)]
+        [CustomComboInfo("骑士简单模式 - AoE", $"一键输出(全蚀斩)", PLD.JobID)]
         PLD_AoE_SimpleMode = 11001,
 
         [ConflictingCombos(PLD_ST_SimpleMode)]
         [ReplaceSkill(PLD.FastBlade)]
-        [CustomComboInfo("骑士简单模式 - 单目标", $"Replaces Fast Blade with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full single target rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
+        [CustomComboInfo("骑士高级模式 - 单目标", $"自定义循环链(先锋剑)", PLD.JobID)]
         PLD_ST_AdvancedMode = 11002,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
@@ -2144,7 +2144,7 @@ namespace XIVSlothCombo.Combos
 
         [ConflictingCombos(PLD_AoE_SimpleMode)]
         [ReplaceSkill(PLD.TotalEclipse)]
-        [CustomComboInfo("骑士简单模式 - AoE", $"Replaces Total Eclipse with 当 深谋远虑之策 冷却完毕时，将 生命活性法 替换为 深谋远虑之策。 one-button full AoE rotation.\\nThese features are ideal if you want to customize the rotation.", PLD.JobID)]
+        [CustomComboInfo("骑士高级模式 - AoE", $"自定义循环链(全蚀斩)", PLD.JobID)]
         PLD_AoE_AdvancedMode = 11015,
 
         [ParentCombo(PLD_AoE_AdvancedMode)]
@@ -2181,11 +2181,11 @@ namespace XIVSlothCombo.Combos
 
 
         [ReplaceSkill(PLD.Requiescat)]
-        [CustomComboInfo("安魂祈祷 Spender Option", "Replaces 安魂祈祷 with the selected option while having stacks of \"Requiescat\"", PLD.JobID)]
+        [CustomComboInfo("安魂祈祷 Spender Option", "当安魂祈祷状态下用下面的技能替换", PLD.JobID)]
         PLD_Requiescat_Options = 11024,
 
         [ReplaceSkill(PLD.SpiritsWithin, PLD.Expiacion)]
-        [CustomComboInfo("深奥之灵 / 偿赎剑 / 厄运流转 Feature", "Replaces 深奥之灵 / 偿赎剑 with 厄运流转 when off cooldown.", PLD.JobID)]
+        [CustomComboInfo("深奥之灵/偿赎剑  Feature", "当厄运流转冷却用(深奥之灵/偿赎剑)代替(好像有bug)", PLD.JobID)]
         PLD_SpiritsWithin = 11025,
 
         [Variant]
