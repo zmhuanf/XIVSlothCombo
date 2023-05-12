@@ -2119,7 +2119,7 @@ namespace XIVSlothCombo.Combos
         PLD_ST_AdvancedMode_GoringBlade = 11008,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
-        [CustomComboInfo("圣环 Option", "Adds 圣环 to Advanced Mode", PLD.JobID)]
+        [CustomComboInfo("圣灵 Option", "Adds 圣灵 to Advanced Mode", PLD.JobID)]
         PLD_ST_AdvancedMode_HolySpirit = 11009,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
