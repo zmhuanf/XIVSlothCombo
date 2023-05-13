@@ -411,6 +411,14 @@ namespace XIVSlothCombo.Combos.PvE
                                 return OriginalHook(RiotBlade);
                             }
 
+                            
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
+                                lastComboActionID == OriginalHook(RiotBlade)&&
+                                (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
+                                GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
+                                return OriginalHook(HolySpirit);
+                            
+                            
                             if (lastComboActionID == OriginalHook(RiotBlade) &&
                                 OriginalHook(RoyalAuthority).LevelChecked())
                             {
@@ -434,10 +442,10 @@ namespace XIVSlothCombo.Combos.PvE
                             return OriginalHook(Requiescat);
 
                         
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
-                            (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
-                            GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
-                            return OriginalHook(HolySpirit);
+                        // if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
+                        //     (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
+                        //     GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
+                        //     return OriginalHook(HolySpirit);
 
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_GoringBlade) &&
                             GoringBlade.LevelChecked() &&
