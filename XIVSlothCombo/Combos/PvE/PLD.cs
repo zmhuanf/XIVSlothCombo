@@ -287,12 +287,21 @@ namespace XIVSlothCombo.Combos.PvE
 
                         if (CanWeave(actionID))
                         {
-                            
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && 
-                                IsOffCooldown(FightOrFlight) && 
-                                LevelChecked(FightOrFlight)&&
-                                ActionWatching.LastAction == RiotBlade)
-                                return FightOrFlight;
+                                IsOffCooldown(FightOrFlight) 
+                                && LevelChecked(FightOrFlight))
+                            {
+                                if (ActionWatching.LastAction == RiotBlade)
+                                {
+                                    return OriginalHook(FightOrFlight);
+                                }
+                                //todo 先拿厄运流转判断 ，后续可以拿忠义之剑buff判断，6.4王权不断连击可以删除这个代码了
+                                if (GetCooldownRemainingTime(CircleOfScorn) > 0)
+                                {
+                                    return OriginalHook(FightOrFlight);
+                                }
+                            }
+
                             
                             Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
                             if (IsEnabled(CustomComboPreset.PLD_Variant_SpiritDart) &&
