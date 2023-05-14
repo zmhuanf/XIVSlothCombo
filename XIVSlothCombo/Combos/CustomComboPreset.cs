@@ -2095,6 +2095,10 @@ namespace XIVSlothCombo.Combos
         PLD_ST_AdvancedMode = 11002,
 
         [ParentCombo(PLD_ST_AdvancedMode)]
+        [CustomComboInfo("起手设置", "设置多少GCD起手", PLD.JobID)]
+        PLD_ST_AdvancedMode_Open = 110034,
+
+        [ParentCombo(PLD_ST_AdvancedMode)]
         [CustomComboInfo("战逃反应 Option", "Adds 战逃反应 to Advanced Mode.", PLD.JobID)]
         PLD_ST_AdvancedMode_FoF = 11003,
 
@@ -2187,6 +2191,9 @@ namespace XIVSlothCombo.Combos
         [ReplaceSkill(PLD.SpiritsWithin, PLD.Expiacion)]
         [CustomComboInfo("深奥之灵/偿赎剑  Feature", "当厄运流转冷却用(深奥之灵/偿赎剑)代替(好像有bug)", PLD.JobID)]
         PLD_SpiritsWithin = 11025,
+        
+        
+       
 
         [Variant]
         [VariantParent(PLD_ST_SimpleMode, PLD_ST_AdvancedMode, PLD_AoE_SimpleMode, PLD_AoE_AdvancedMode)]

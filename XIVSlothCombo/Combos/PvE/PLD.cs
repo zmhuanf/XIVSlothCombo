@@ -67,7 +67,8 @@ namespace XIVSlothCombo.Combos.PvE
                 PLD_VariantCure = "PLD_VariantCure",
                 PLD_RequiescatOption = "PLD_RequiescatOption",
                 PLD_SpiritsWithinOption = "PLD_SpiritsWithinOption",
-                PLD_SheltronOption = "PLD_SheltronOption";
+                PLD_SheltronOption = "PLD_SheltronOption",
+                PLD_FOF_GCD = "PLD_FOF_GCD";
         }
 
         internal class PLD_ST_SimpleMode : CustomCombo
@@ -273,28 +274,55 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (HasBattleTarget())
                     {
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
-                            !InMeleeRange() &&
-                            HolySpirit.LevelChecked() &&
-                            GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp &&
-                            !IsMoving)
-                            return OriginalHook(HolySpirit);
+                        // if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
+                        //     !InMeleeRange() &&
+                        //     HolySpirit.LevelChecked() &&
+                        //     GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp &&
+                        //     !IsMoving)
+                        //     return OriginalHook(HolySpirit);
 
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_ShieldLob) &&
                             !InMeleeRange() &&
                             ShieldLob.LevelChecked())
                             return OriginalHook(ShieldLob);
 
-                        if (CanWeave(actionID))
+                        if (CanDelayedWeave(actionID))
                         {
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && 
                                 IsOffCooldown(FightOrFlight) 
                                 && LevelChecked(FightOrFlight))
                             {
-                                if (ActionWatching.LastAction == RiotBlade)
+                                //修改为3GCD起手
+                                var choice = GetOptionValue(Config.PLD_FOF_GCD);
+
+                                switch (choice)
                                 {
-                                    return OriginalHook(FightOrFlight);
+                                    case 1:
+                                    {
+                                        if (ActionWatching.LastAction == RiotBlade)
+                                        {
+                                            return OriginalHook(FightOrFlight);
+                                        }
+                                        break;
+                                    }
+                                    case 2:
+                                    {
+                                        if (ActionWatching.LastAction == RoyalAuthority)
+                                        {
+                                            return OriginalHook(FightOrFlight);
+                                        }
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        if (ActionWatching.LastAction == RoyalAuthority)
+                                        {
+                                            return OriginalHook(FightOrFlight);
+                                        }
+                                        break;
+                                    }
                                 }
+                                
                                 //todo 先拿厄运流转判断 ，后续可以拿忠义之剑buff判断，6.4王权不断连击可以删除这个代码了
                                 if (GetCooldownRemainingTime(CircleOfScorn) > 0)
                                 {
@@ -367,6 +395,12 @@ namespace XIVSlothCombo.Combos.PvE
 
                         }
 
+                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
+                            GetBuffRemainingTime(Buffs.DivineMight) is > 0 and < 3f &&
+                            GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
+                            return OriginalHook(HolySpirit);
+                        
+                        //战逃内
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && HasEffect(Buffs.FightOrFlight))
                         {
 
@@ -400,6 +434,11 @@ namespace XIVSlothCombo.Combos.PvE
                                 HasEffect(Buffs.DivineMight) &&
                                 GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
                                 return OriginalHook(HolySpirit);
+                            
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
+                                HasEffectAny(Buffs.SwordOath) &&
+                                Atonement.LevelChecked())
+                                return OriginalHook(Atonement);
 
                         }
 
@@ -413,8 +452,9 @@ namespace XIVSlothCombo.Combos.PvE
 
                             
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
-                                lastComboActionID == OriginalHook(RiotBlade)&&
-                                (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
+                                lastComboActionID == OriginalHook(RiotBlade) &&
+                                (HasEffect(Buffs.DivineMight) ) &&
+                                // (HasEffect(Buffs.DivineMight) || HasEffect(Buffs.Requiescat)) &&
                                 GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp)
                                 return OriginalHook(HolySpirit);
                             
@@ -430,6 +470,8 @@ namespace XIVSlothCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) &&
                             FightOrFlight.LevelChecked() &&
                             IsOffCooldown(FightOrFlight) &&
+                            !LocalPlayer.IsCasting &&
+                            ActionWatching.LastAction != OriginalHook(HolySpirit) &&
                             CanWeave(actionID) &&
                             !ActionWatching.WasLast2ActionsAbilities())
                             return OriginalHook(FightOrFlight);
@@ -463,12 +505,24 @@ namespace XIVSlothCombo.Combos.PvE
                             OriginalHook(Confiteor) != Confiteor &&
                             GetResourceCost(OriginalHook(Confiteor)) <= LocalPlayer.CurrentMp)))
                             return OriginalHook(Confiteor);
+                        
+                     
+                        
 
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
-                            HasEffectAny(Buffs.SwordOath) &&
-                            Atonement.LevelChecked())
+                            Atonement.LevelChecked() &&
+                            HasEffect(Buffs.SwordOath) &&
+                            GetCooldownRemainingTime(FightOrFlight) is > 15 and < 30 &&
+                            GetBuffStacks(PLD.Buffs.SwordOath) is > 2)
                             return OriginalHook(Atonement);
 
+                        
+                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
+                            Atonement.LevelChecked() &&
+                            HasEffect(Buffs.SwordOath) &&
+                            GetCooldownRemainingTime(FightOrFlight) is < 16 or > 30 )
+                            return OriginalHook(Atonement);
+                        
                     }
                 }
 

@@ -1483,6 +1483,14 @@ namespace XIVSlothCombo.Window.Functions
                 UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "圣灵", "", 4);
                 UserConfig.DrawRadioButton(PLD.Config.PLD_RequiescatOption, "圣环", "", 5);
             }
+            
+            if (preset == CustomComboPreset.PLD_ST_AdvancedMode_Open)
+            {
+                UserConfig.DrawRadioButton(PLD.Config.PLD_FOF_GCD, "2GCD", "", 1);
+                UserConfig.DrawRadioButton(PLD.Config.PLD_FOF_GCD, "3GCD", "", 2);
+       
+            }
+            
 
             if (preset == CustomComboPreset.PLD_SpiritsWithin)
             {
