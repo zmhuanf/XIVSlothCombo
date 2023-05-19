@@ -65,6 +65,12 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.TextUnformatted($"buff : {CustomComboFunctions.GetBuffRemainingTime(PLD.Buffs.DivineMight)}");
                 ImGui.TextUnformatted($"王权层数 : {CustomComboFunctions.GetBuffStacks(PLD.Buffs.SwordOath)}");
                 ImGui.TextUnformatted($"战逃倒计时 : {CustomComboFunctions.GetCooldownRemainingTime(PLD.FightOrFlight)}");
+                
+                ImGui.TextUnformatted($"战逃个数 : {ActionWatching.CombatActions.FindAll(actionId => actionId ==PLD. FightOrFlight).Count}");
+                
+                ImGui.TextUnformatted($"战逃个数 : {ActionWatching.CombatActions.Count}");
+                
+                
                 ImGui.BeginChild("BLUSPELLS", new Vector2(250, 100), false);
                 ImGui.TextUnformatted($"SELECTED BLU SPELLS:\n{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(x => ActionWatching.GetActionName(x)).OrderBy(x => x))}");
                 ImGui.EndChild();

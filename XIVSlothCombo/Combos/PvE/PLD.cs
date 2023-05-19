@@ -192,7 +192,7 @@ namespace XIVSlothCombo.Combos.PvE
                             IsEnabled(Variant.VariantSpiritDart) &&
                             (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
                             return Variant.VariantSpiritDart;
-
+        
                         if (IsEnabled(CustomComboPreset.PLD_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) && IsOffCooldown(Variant.VariantUltimatum))
                             return Variant.VariantUltimatum;
 
@@ -221,7 +221,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 return OriginalHook(Confiteor);
 
                             if (GetResourceCost(HolyCircle) <= LocalPlayer.CurrentMp && HolyCircle.LevelChecked())
-                                return OriginalHook(HolyCircle);
+                                return OriginalHook(HolyCircle);    
 
                             if (GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && HolySpirit.LevelChecked())
                                 return OriginalHook(HolySpirit);
@@ -324,7 +324,9 @@ namespace XIVSlothCombo.Combos.PvE
                                 }
                                 
                                 //todo 先拿厄运流转判断 ，后续可以拿忠义之剑buff判断，6.4王权不断连击可以删除这个代码了
-                                if (GetCooldownRemainingTime(CircleOfScorn) > 0)
+                                // if (GetCooldownRemainingTime(CircleOfScorn) > 0)
+                                //战逃好了就开
+                                if (ActionWatching.CombatActions.FindAll(actionId => actionId ==PLD. FightOrFlight).Count > 0)
                                 {
                                     return OriginalHook(FightOrFlight);
                                 }
@@ -505,24 +507,37 @@ namespace XIVSlothCombo.Combos.PvE
                             OriginalHook(Confiteor) != Confiteor &&
                             GetResourceCost(OriginalHook(Confiteor)) <= LocalPlayer.CurrentMp)))
                             return OriginalHook(Confiteor);
-                        
-                     
-                        
 
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
-                            Atonement.LevelChecked() &&
-                            HasEffect(Buffs.SwordOath) &&
-                            GetCooldownRemainingTime(FightOrFlight) is > 15 and < 30 &&
-                            GetBuffStacks(PLD.Buffs.SwordOath) is > 2)
-                            return OriginalHook(Atonement);
+
+                        int fightOrFlightCount = ActionWatching.CombatActions.FindAll(actionId => actionId == FightOrFlight).Count;
+                        if (fightOrFlightCount >= 2)
+                        {
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
+                                Atonement.LevelChecked() &&
+                                HasEffect(Buffs.SwordOath) &&
+                                GetCooldownRemainingTime(FightOrFlight) is > 15 and < 30 &&
+                                GetBuffStacks(PLD.Buffs.SwordOath) is > 2)
+                                return OriginalHook(Atonement);
 
                         
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
-                            Atonement.LevelChecked() &&
-                            HasEffect(Buffs.SwordOath) &&
-                            GetCooldownRemainingTime(FightOrFlight) is < 16 or > 30 )
-                            return OriginalHook(Atonement);
-                        
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
+                                Atonement.LevelChecked() &&
+                                HasEffect(Buffs.SwordOath) &&
+                                GetCooldownRemainingTime(FightOrFlight) is < 16 or > 30 )
+                                return OriginalHook(Atonement);
+
+                        }
+                        else
+                        {
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Atonement) &&
+                                Atonement.LevelChecked() &&
+                                HasEffect(Buffs.SwordOath) )
+                                return OriginalHook(Atonement); 
+                        }
+
+
+
+
                     }
                 }
 

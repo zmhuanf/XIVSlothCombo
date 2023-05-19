@@ -39,7 +39,9 @@ namespace XIVSlothCombo.Data
         {
             ReceiveActionEffectHook!.Original(sourceObjectId, sourceActor, position, effectHeader, effectArray, effectTrail);
             TimeLastActionUsed = DateTime.Now;
-            if (!CustomComboFunctions.InCombat()) CombatActions.Clear();
+            if (!CustomComboFunctions.InCombat()) 
+                CombatActions.Clear();
+            
             ActionEffectHeader header = Marshal.PtrToStructure<ActionEffectHeader>(effectHeader);
 
             if (ActionType is 13 or 2) return;
