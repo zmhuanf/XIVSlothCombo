@@ -274,19 +274,12 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (HasBattleTarget())
                     {
-                        // if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
-                        //     !InMeleeRange() &&
-                        //     HolySpirit.LevelChecked() &&
-                        //     GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp &&
-                        //     !IsMoving)
-                        //     return OriginalHook(HolySpirit);
-
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_ShieldLob) &&
                             !InMeleeRange() &&
                             ShieldLob.LevelChecked())
                             return OriginalHook(ShieldLob);
 
-                        if (CanDelayedWeave(actionID))
+                        if (CanDelayedWeave(actionID,2,0.5))
                         {
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && 
                                 IsOffCooldown(FightOrFlight) 
@@ -323,10 +316,9 @@ namespace XIVSlothCombo.Combos.PvE
                                     }
                                 }
                                 
-                                //todo 先拿厄运流转判断 ，后续可以拿忠义之剑buff判断，6.4王权不断连击可以删除这个代码了
-                                // if (GetCooldownRemainingTime(CircleOfScorn) > 0)
+                          
                                 //战逃好了就开
-                                if (ActionWatching.CombatActions.FindAll(actionId => actionId ==PLD. FightOrFlight).Count > 0)
+                                if (ActionWatching.CombatActions.FindAll(actionId => actionId == FightOrFlight).Count > 0 && WasLastAction(RiotBlade))
                                 {
                                     return OriginalHook(FightOrFlight);
                                 }
@@ -363,12 +355,18 @@ namespace XIVSlothCombo.Combos.PvE
 
                                     if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_CircleOfScorn) &&
                                         CircleOfScorn.LevelChecked() &&
-                                        IsOffCooldown(CircleOfScorn))
+                                        IsOffCooldown(CircleOfScorn) &&
+                                        !WasLastAction(FightOrFlight) &&
+                                        !WasLastAction(Requiescat)
+                                       )
                                         return OriginalHook(CircleOfScorn);
-
+                                    
                                     if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_SpiritsWithin) &&
                                         OriginalHook(SpiritsWithin).LevelChecked() &&
-                                        IsOffCooldown(OriginalHook(SpiritsWithin)))
+                                        IsOffCooldown(OriginalHook(SpiritsWithin))&&
+                                        !WasLastAction(FightOrFlight) &&
+                                        !WasLastAction(Requiescat)
+                                        )
                                         return OriginalHook(SpiritsWithin);
 
                                     if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Intervene) &&
@@ -378,23 +376,29 @@ namespace XIVSlothCombo.Combos.PvE
                                         return OriginalHook(Intervene);
                                 }
                                 
+                               
+                            }
+
+                        }
+
+                        if (CanWeave(actionID))
+                        {
+                            if (GetCooldownRemainingTime(FightOrFlight) >= 15)
+                            {
                                 if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_CircleOfScorn) &&
                                     CircleOfScorn.LevelChecked() &&
                                     IsOffCooldown(CircleOfScorn) &&
-                                    CanWeave(actionID) &&
-                                    (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) &&
-                                    !ActionWatching.WasLast2ActionsAbilities())
+                                    !WasLastAction(FightOrFlight) && 
+                                    !WasLastAction(Requiescat))
                                     return OriginalHook(CircleOfScorn);
 
                                 if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_SpiritsWithin) &&
                                     SpiritsWithin.LevelChecked() &&
                                     IsOffCooldown(SpiritsWithin) &&
-                                    CanWeave(actionID) &&
-                                    (!WasLastAction(FightOrFlight) && GetCooldownRemainingTime(FightOrFlight) >= 15 || IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF)) 
-                                    && !ActionWatching.WasLast2ActionsAbilities())
-                                    return OriginalHook(SpiritsWithin);
+                                    !WasLastAction(FightOrFlight) && 
+                                    !WasLastAction(Requiescat))
+                                    return OriginalHook(SpiritsWithin); 
                             }
-
                         }
 
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HolySpirit) &&
@@ -405,7 +409,6 @@ namespace XIVSlothCombo.Combos.PvE
                         //战逃内
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && HasEffect(Buffs.FightOrFlight))
                         {
-
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_GoringBlade) &&
                                 GoringBlade.LevelChecked() &&
                                 IsOffCooldown(GoringBlade))
