@@ -68,7 +68,19 @@ namespace XIVSlothCombo.Window.Tabs
                 
                 ImGui.TextUnformatted($"战逃个数 : {ActionWatching.CombatActions.FindAll(actionId => actionId ==PLD. FightOrFlight).Count}");
                 
-                ImGui.TextUnformatted($"战逃个数 : {ActionWatching.CombatActions.Count}");
+                ImGui.TextUnformatted($"摆烂循环 : {PLD.ActionLoop}");
+                ImGui.TextUnformatted($"摆烂循环 : {CustomComboFunctions.GetOptionValue(PLD.Config.PLD_FOF_GCD)}");
+                
+                ImGui.TextUnformatted($"WasLast2ActionsAbilities : {ActionWatching.WasLast2ActionsAbilities()}");
+                if (ActionWatching.CombatActions.Count > 2)
+                {
+                    ImGui.TextUnformatted($"摆烂循环1 : {ActionWatching.CombatActions.Last()}");
+                    ImGui.TextUnformatted($"摆烂循环2 : {ActionWatching.CombatActions[ActionWatching.CombatActions.Count - 2]}");
+                    ImGui.TextUnformatted($"摆烂循环3 : {ActionWatching.GetAttackType(ActionWatching.CombatActions.Last())}");
+                }
+
+
+                // ImGui.TextUnformatted($"战逃个数 : {ActionWatching.CombatActions.Count}");
                 
                 
                 ImGui.BeginChild("BLUSPELLS", new Vector2(250, 100), false);
