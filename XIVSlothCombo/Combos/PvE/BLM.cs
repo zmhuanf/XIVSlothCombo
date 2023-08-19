@@ -356,7 +356,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     {
                                         triplecastMP = 6000;
                                     }
-                                    if (currentMP <= triplecastMP)
+                                    if (currentMP <= triplecastMP && GetRemainingCharges(Triplecast) > 1)
                                     {
                                         return Triplecast;
                                     }
