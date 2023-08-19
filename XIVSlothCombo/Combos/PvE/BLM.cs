@@ -166,10 +166,53 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_AoE_SimpleMode;
 
+            internal static DateTime previousTime;
+            internal static double movementTime = 0.0f;
+
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID is Flare)
                 {
+                    // Handle movement
+                    if (IsEnabled(CustomComboPreset.BLM_Simple_CastMovement) && InCombat())
+                    {
+                        var movementTimeThreshold = PluginConfiguration.GetCustomFloatValue(Config.BLM_MovementTime);
+                        double deltaTime = (DateTime.Now - previousTime).TotalSeconds;
+                        previousTime = DateTime.Now;
+                        if (IsMoving)
+                        {
+                            movementTime = movementTime + deltaTime > movementTimeThreshold + 0.02 ? movementTimeThreshold + 0.02 : movementTime + deltaTime;
+                        }
+                        else
+                        {
+                            movementTime = movementTime - deltaTime < 0 ? 0 : movementTime - (deltaTime * 2);
+                        }
+
+                        if (movementTime > movementTimeThreshold && !HasEffect(Buffs.Triplecast) && !HasEffect(All.Buffs.Swiftcast))
+                        {
+                            if (InCombat() && LocalPlayer.CurrentCastTime == 0.0f)
+                            {
+                                if (HasEffect(Buffs.Thundercloud))
+                                {
+                                    if (!ThunderList.ContainsKey(lastComboMove))
+                                    {
+                                        uint dot = OriginalHook(Thunder2); //Grab the appropriate DoT Action
+                                        return dot;
+                                    }
+                                }
+                                if (IsOffCooldown(All.Swiftcast))
+                                {
+                                    return All.Swiftcast;
+                                }
+                                if (ActionReady(Triplecast))
+                                {
+                                    return Triplecast;
+                                }
+                            }
+                        }
+                    }
+
+
                     var currentMP = LocalPlayer.CurrentMp;
                     var polyToStore = PluginConfiguration.GetCustomIntValue(Config.BLM_PolyglotsStored);
 
