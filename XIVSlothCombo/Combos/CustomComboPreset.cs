@@ -451,6 +451,11 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("治疗 选项", "在下水道使用治疗当HP低于某个值", BLM.JobID)]
         BLM_Variant_Cure = 2034,
 
+        [ReplaceSkill(BLM.Scathe)]
+        [ConflictingCombos(BLM_SimpleMode, BLM_Simple_Transpose, BLM_Paradox)]
+        [CustomComboInfo("自定义循环", "将崩溃整合为单体自定义循环。", BLM.JobID, -3, "", "")]
+        BLM_Zimo = 2500,
+
         // Last value = 2034
 
         #endregion
