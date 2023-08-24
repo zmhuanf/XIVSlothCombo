@@ -1550,11 +1550,15 @@ namespace XIVSlothCombo.Combos.PvE
                         {
                             fire4Count++;
                         }
-                        if (lastGCD == Fire || lastGCD == Fire3 || lastGCD == Paradox || lastGCD == Despair)
-                        {
-                            fire4Count = 0;
-                            fireChance = true;
-                        }
+                        //if (lastGCD == Fire || lastGCD == Fire3 || lastGCD == Paradox || lastGCD == Despair)
+                        //{
+                        //    fire4Count = 0;
+                        //    var firestarterBuff = FindEffect(Buffs.Firestarter);
+                        //    if (firestarterBuff != null && firestarterBuff.RemainingTime > 15000)
+                        //    {
+                        //        fireChance = true;
+                        //    }
+                        //}
                         if (lastGCD == Thunder || lastGCD == Thunder3 || lastGCD == Foul)
                         {
                             fireChance = false;
@@ -1576,6 +1580,15 @@ namespace XIVSlothCombo.Combos.PvE
                     lastComboMove == Foul)
                     {
                         fireChance = false;
+                    }
+                    if (lastComboMove == Fire || lastComboMove == Fire3 || lastComboMove == Paradox || lastComboMove == Despair)
+                    {
+                        fire4Count = 0;
+                        var firestarterBuff = FindEffect(Buffs.Firestarter);
+                        if (firestarterBuff != null && firestarterBuff.RemainingTime > 15000)
+                        {
+                            fireChance = true;
+                        }
                     }
 
                     // 判断并使用特殊连招
@@ -1636,9 +1649,10 @@ namespace XIVSlothCombo.Combos.PvE
                         }
                         // 三连咏唱
                         if (LevelChecked(Triplecast) && Gauge.InAstralFire && GetRemainingCharges(Triplecast) > 1 &&
-                            FindEffect(Buffs.Triplecast) == null && lastOGCD != Triplecast &&
-                            (currentMP >= 4000 && LevelChecked(Despair) && Gauge.ElementTimeRemaining > 6000 ||
-                            currentMP >= 2400 && Gauge.UmbralHearts == 3 && Gauge.ElementTimeRemaining > 10000))
+                            !HasEffect(Buffs.Triplecast) && lastOGCD != Triplecast &&
+                            currentMP >= MP.Fire * 2 + MP.Despair)
+                            //(currentMP >= 4000 && LevelChecked(Despair) && Gauge.ElementTimeRemaining > 600cu0 ||
+                            //currentMP >= 2400 && Gauge.UmbralHearts == 3 && Gauge.ElementTimeRemaining > 10000))
                         {
                             lastOGCD = Triplecast;
                             return Triplecast;
@@ -1720,7 +1734,7 @@ namespace XIVSlothCombo.Combos.PvE
                         // 补buff
                         // 电2
                         var buff = FindTargetEffect(ThunderList[thunder]);
-                        if (LevelChecked(thunder) && thundercloudBuff != null && (buff is null || buff.RemainingTime <= 4) && currentMP >= MP.Thunder && thunderChance && lastComboMove != thunder)
+                        if (LevelChecked(thunder) && (buff is null || buff.RemainingTime <= 4) && currentMP >= MP.Thunder && thunderChance && lastComboMove != thunder)
                         {
                             lastGCD = thunder;
                             return thunder;
