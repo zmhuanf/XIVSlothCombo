@@ -931,7 +931,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // Ê§Ñª¼ý
-                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter))
+                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -956,7 +956,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // Ê§Ñª¼ý
                         if (ActionReady(Bloodletter) && (GetRemainingCharges(Bloodletter) > GetMaxCharges(Bloodletter) - 2 ||
-                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)))
+                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !JustUsed(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -971,7 +971,8 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         windbite_buff = Debuffs.Stormbite;
                     }
-                    if (LevelChecked(windbite) && !TargetHasEffect(windbite_buff) && !JustUsed(windbite))
+                    var buff1 = FindTargetEffect(windbite_buff);
+                    if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
                     {
                         return windbite;
                     }
@@ -983,15 +984,14 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         venomousBite_buff = Debuffs.CausticBite;
                     }
-                    if (LevelChecked(venomousBite) && !TargetHasEffect(venomousBite_buff) && !JustUsed(venomousBite_buff))
+                    var buff2 = FindTargetEffect(venomousBite_buff);
+                    if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite_buff))
                     {
                         return venomousBite;
                     }
 
                     // ÁæÑÀÀþ³Ý
-                    var buff1 = FindTargetEffect(windbite_buff);
-                    var buff2 = FindTargetEffect(venomousBite_buff);
-                    if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 3 || buff2.RemainingTime < 3))
+                    if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 || buff2.RemainingTime < 4))
                     {
                         return IronJaws;
                     }
@@ -1085,9 +1085,15 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // ËÀÍö¼ýÓê
-                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath))
+                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath) && !JustUsed(RainOfDeath))
                         {
                             return RainOfDeath;
+                        }
+
+                        // Ê§Ñª¼ý
+                        if (!LevelChecked(RainOfDeath) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
+                        {
+                            return Bloodletter;
                         }
 
                         // ¾ÅÌìÁ¬¼ý
@@ -1103,9 +1109,15 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // ËÀÍö¼ýÓê
-                        if (ActionReady(RainOfDeath))
+                        if (ActionReady(RainOfDeath) && !JustUsed(RainOfDeath))
                         {
                             return RainOfDeath;
+                        }
+
+                        // Ê§Ñª¼ý
+                        if (!LevelChecked(RainOfDeath) && ActionReady(Bloodletter) && !JustUsed(Bloodletter))
+                        {
+                            return Bloodletter;
                         }
 
                         // ¹âÃ÷ÉñµÄ×îÖÕÀÖÕÂ
