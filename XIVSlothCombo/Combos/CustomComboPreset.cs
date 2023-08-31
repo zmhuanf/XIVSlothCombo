@@ -453,7 +453,7 @@ namespace XIVSlothCombo.Combos
 
         [ReplaceSkill(BLM.Scathe)]
         [ConflictingCombos(BLM_SimpleMode, BLM_Simple_Transpose, BLM_Paradox)]
-        [CustomComboInfo("自定义循环", "将崩溃整合为单体自定义循环。", BLM.JobID, -3, "", "")]
+        [CustomComboInfo("测试单体循环", "测试循环，请勿勾选。", BLM.JobID, -3, "", "")]
         BLM_Zimo = 2500,
 
         // Last value = 2034
@@ -699,6 +699,11 @@ namespace XIVSlothCombo.Combos
         [VariantParent(BRD_ST_SimpleMode, BRD_AoE_SimpleMode)]
         [CustomComboInfo("治疗 选项", "在下水道使用治疗当HP低于某个值", BRD.JobID)]
         BRD_Variant_Cure = 3031,
+
+        [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
+        [ConflictingCombos(BRD_StraightShotUpgrade, BRD_DoTMaintainance, BRD_Apex, BRD_ST_oGCD, BRD_IronJawsApex, BRD_ST_SimpleMode)]
+        [CustomComboInfo("测试单体循环", "测试循环，请勿勾选", BRD.JobID, 0, "", "")]
+        BRD_Zimo = 3500,
 
         // Last value = 3031
 
