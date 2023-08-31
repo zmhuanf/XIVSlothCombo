@@ -2,6 +2,7 @@ using System;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using Dalamud.Interface.Animation;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
@@ -1194,6 +1195,15 @@ namespace XIVSlothCombo.Combos.PvE
             }
         }
 
+        // 常用技能翻译
+        // QuickNock 连珠箭 低等级AOE 18
+        // Ladonsbite 百首龙牙箭 高等级AOE 82
+        // WanderersMinuet 放浪神的小步舞曲 52
+        // MagesBallad 贤者的叙事谣 30
+        // ArmysPaeon 军神的赞美歌 40
+        // PitchPerfect 完美音调 52
+        // EmpyrealArrow 九天连箭 54
+
         internal class BRD_Test_AOE : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Test_AOE;
@@ -1205,72 +1215,102 @@ namespace XIVSlothCombo.Combos.PvE
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
                     bool canWeave = CanWeave(actionID);
 
-                    if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
-                        return Variant.VariantCure;
-
-                    if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
-                        IsEnabled(Variant.VariantRampart) &&
-                        IsOffCooldown(Variant.VariantRampart) &&
-                        canWeave)
-                        return Variant.VariantRampart;
-
-                    if (IsEnabled(CustomComboPreset.BRD_AoE_Simple_Songs) && canWeave)
+                    // 能力技
+                    if (canWeave)
                     {
+                        // 完美音调
+                        if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
+                        {
+                            return OriginalHook(WanderersMinuet);
+                        }
+
+                        // 歌曲
                         int songTimerInSeconds = gauge.SongTimer / 1000;
                         bool songNone = gauge.Song == Song.NONE;
 
                         if (songTimerInSeconds < 3 || songNone)
                         {
-                            if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet) &&
-                                !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)) &&
-                                !IsEnabled(CustomComboPreset.BRD_AoE_Simple_SongsExcludeWM))
+                            if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
+                            {
                                 return WanderersMinuet;
-
-                            if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad) &&
-                                !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
-                                return MagesBallad;
-
-                            if (LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon) &&
-                                !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
-                                return ArmysPaeon;
+                            }
+                            if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
+                            {
+                                return WanderersMinuet;
+                            }
+                            if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
+                            {
+                                return WanderersMinuet;
+                            }
                         }
-                    }
 
-                    if (canWeave)
-                    {
-                        bool songWanderer = gauge.Song == Song.WANDERER;
-                        bool empyrealReady = LevelChecked(EmpyrealArrow) && IsOffCooldown(EmpyrealArrow);
-                        bool rainOfDeathReady = LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) > 0;
-                        bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
-
-                        if (LevelChecked(PitchPerfect) && songWanderer && gauge.Repertoire == 3)
-                            return OriginalHook(WanderersMinuet);
-                        if (empyrealReady)
-                            return EmpyrealArrow;
-                        if (rainOfDeathReady)
-                            return RainOfDeath;
-                        if (sidewinderReady)
-                            return Sidewinder;
-
-                        // healing - please move if not appropriate priority
-                        if (IsEnabled(CustomComboPreset.BRD_AoE_SecondWind))
+                        // 猛者强击
+                        if (ActionReady(RagingStrikes))
                         {
-                            if (PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.BRD_AoESecondWindThreshold) && ActionReady(All.SecondWind))
-                                return All.SecondWind;
+                            return RagingStrikes;
+                        }
+
+                        // 战斗之声
+                        if (ActionReady(BattleVoice))
+                        {
+                            return BattleVoice;
+                        }
+
+                        // 死亡箭雨
+                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath))
+                        {
+                            return RainOfDeath;
+                        }
+
+                        // 九天连箭
+                        if (ActionReady(EmpyrealArrow) &&(gauge.Song != Song.MAGE ||
+                            GetRemainingCharges(RainOfDeath) < GetMaxCharges(RainOfDeath) && GetCooldownChargeRemainingTime(RainOfDeath) > 7.5))
+                        {
+                            return EmpyrealArrow;
+                        }
+
+                        // 侧风诱导箭
+                        if (ActionReady(Sidewinder))
+                        {
+                            return Sidewinder;
+                        }
+
+                        // 死亡箭雨
+                        if (ActionReady(RainOfDeath))
+                        {
+                            return RainOfDeath;
+                        }
+
+                        // 光明神的最终乐章
+                        if (ActionReady(RadiantFinale) && Array.TrueForAll(gauge.Coda, SongIsNotNone))
+                        {
+                            return RadiantFinale;
                         }
                     }
 
-                    bool shadowbiteReady = LevelChecked(Shadowbite) && HasEffect(Buffs.ShadowbiteReady);
-                    bool blastArrowReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
+                    // 战技
 
-                    if (shadowbiteReady)
-                        return Shadowbite;
-                    if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100 && !IsEnabled(CustomComboPreset.BRD_RemoveApexArrow))
-                        return ApexArrow;
-                    if (blastArrowReady)
+                    // 爆破箭
+                    if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
+                    {
                         return BlastArrow;
-                }
+                    }
 
+                    // 绝峰箭
+                    if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
+                    {
+                        return ApexArrow;
+                    }
+
+                    // 影噬箭
+                    if (LevelChecked(Shadowbite) && HasEffect(Buffs.ShadowbiteReady))
+                    {
+                        return Shadowbite;
+                    }
+
+                    // 强力射击 / 爆发射击
+                    return actionID;
+                }
                 return actionID;
             }
         }
