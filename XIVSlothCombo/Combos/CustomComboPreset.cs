@@ -588,6 +588,14 @@ namespace XIVSlothCombo.Combos
         #region BARD
 
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
+        [CustomComboInfo("Test", "This is a test option, non-developers please do not check.", BRD.JobID, 0, "", "")]
+        BRD_Test = 3500,
+
+        [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
+        [CustomComboInfo("Test AOE", "This is a test option, non-developers please do not check.", BRD.JobID, 0, "", "")]
+        BRD_Test_AOE = 3501,
+
+        [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_SimpleMode)]
         [CustomComboInfo("Heavy Shot into Straight Shot Feature", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID, 0, "", "")]
         BRD_StraightShotUpgrade = 3001,
