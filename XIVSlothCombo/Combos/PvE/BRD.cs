@@ -901,6 +901,11 @@ namespace XIVSlothCombo.Combos.PvE
                         if (ActionReady(MagesBallad) && (gauge.Song == Song.NONE || gauge.SongTimer < 3000) &&
                             !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
                         {
+                            // 用掉完美音调先
+                            if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                            {
+                                return OriginalHook(WanderersMinuet);
+                            }
                             return MagesBallad;
                         }
 
@@ -909,6 +914,11 @@ namespace XIVSlothCombo.Combos.PvE
                             gauge.Song == Song.MAGE && gauge.SongTimer < 10000) &&
                             !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
                         {
+                            // 用掉完美音调先
+                            if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                            {
+                                return OriginalHook(WanderersMinuet);
+                            }
                             return ArmysPaeon;
                         }
 
@@ -1064,10 +1074,20 @@ namespace XIVSlothCombo.Combos.PvE
                             }
                             if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
                             {
+                                // 用掉完美音调先
+                                if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                {
+                                    return OriginalHook(WanderersMinuet);
+                                }
                                 return MagesBallad;
                             }
                             if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
                             {
+                                // 用掉完美音调先
+                                if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                {
+                                    return OriginalHook(WanderersMinuet);
+                                }
                                 return ArmysPaeon;
                             }
                         }
