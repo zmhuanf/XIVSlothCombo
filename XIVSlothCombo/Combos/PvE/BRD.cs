@@ -1053,7 +1053,7 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // ÁæÑÀÀþ³Ý
-                    if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 || buff2.RemainingTime < 4))
+                    if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 || buff2.RemainingTime < 4) && !WasLastWeaponskill(IronJaws))
                     {
                         return IronJaws;
                     }
@@ -1075,6 +1075,12 @@ namespace XIVSlothCombo.Combos.PvE
                     if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady))
                     {
                         return straightShot;
+                    }
+
+                    // ÁæÑÀÀþ³Ý
+                    if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 + gcd || buff2.RemainingTime < 4 + gcd) && !WasLastWeaponskill(IronJaws))
+                    {
+                        return IronJaws;
                     }
 
                     // Ç¿Á¦Éä»÷ / ±¬·¢Éä»÷
