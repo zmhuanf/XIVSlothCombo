@@ -3,10 +3,12 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Interface.Animation;
+using Lumina.Excel.GeneratedSheets;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
 using static System.Net.Mime.MediaTypeNames;
+using Status = Dalamud.Game.ClientState.Statuses.Status;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -865,13 +867,8 @@ namespace XIVSlothCombo.Combos.PvE
         internal class BRD_Test : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Test;
-            internal static bool inOpener = false;
-            internal static bool openerFinished = false;
-            internal static byte step = 0;
-            internal static byte subStep = 0;
-            internal static bool usedStraightShotReady = false;
-            internal static bool usedPitchPerfect = false;
-            internal delegate bool DotRecast(int value);
+
+            protected string TimePoint = "";
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
@@ -880,6 +877,61 @@ namespace XIVSlothCombo.Combos.PvE
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
                     bool canWeave = CanWeave(actionID);
 
+                    // 判断特殊时点
+                    // 风debuff
+                    var windbite = OriginalHook(Windbite);
+                    var windbite_buff = Debuffs.Windbite;
+                    if (windbite != Windbite)
+                    {
+                        windbite_buff = Debuffs.Stormbite;
+                    }
+                    var buff1 = FindTargetEffect(windbite_buff);
+                    // 毒debuff
+                    var venomousBite = OriginalHook(VenomousBite);
+                    var venomousBite_buff = Debuffs.VenomousBite;
+                    if (venomousBite != VenomousBite)
+                    {
+                        venomousBite_buff = Debuffs.CausticBite;
+                    }
+                    var buff2 = FindTargetEffect(venomousBite_buff);
+
+                    // 起手爆发时点
+                    if (ActionReady(WanderersMinuet) && (gauge.Song == Song.NONE || gauge.SongTimer < 3000 ||
+                        gauge.Song == Song.MAGE && gauge.SongTimer < 10000) &&
+                        !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)) && buff1 == null && buff2 == null)
+                    {
+                        TimePoint = "起手爆发";
+                    }
+                    // 起手爆发时点结束
+                    if (TimePoint == "起手爆发" && WasLastAction(IronJaws) && (gauge.Repertoire == 0 || WasLastAbility(OriginalHook(WanderersMinuet))))
+                    {
+                        TimePoint = "";
+                    }
+
+
+                    // 根据时点进入特殊循环
+                    var result = actionID;
+                    switch (TimePoint)
+                    {
+                        case "起手爆发":
+                            result = StartBurst(actionID, lastComboMove, comboTime, level);
+                            if (result == 0)
+                            {
+                                TimePoint = "";
+                                break;
+                            }
+                            return result;
+                        case "中期爆发":
+                            result = MidTermBurst(actionID, lastComboMove, comboTime, level);
+                            if (result == 0)
+                            {
+                                TimePoint = "";
+                                break;
+                            }
+                            return result;
+                    }
+
+                    // 通常循环
                     // 能力技能
                     if (canWeave)
                     {
@@ -941,7 +993,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // 失血箭
-                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
+                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !WasLastAbility(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -966,7 +1018,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // 失血箭
                         if (ActionReady(Bloodletter) && (GetRemainingCharges(Bloodletter) > GetMaxCharges(Bloodletter) - 2 ||
-                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !JustUsed(Bloodletter))
+                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !WasLastAbility(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -975,26 +1027,12 @@ namespace XIVSlothCombo.Combos.PvE
                     // 战技
 
                     // 风蚀箭 / 狂风蚀箭
-                    var windbite = OriginalHook(Windbite);
-                    var windbite_buff = Debuffs.Windbite;
-                    if (windbite != Windbite)
-                    {
-                        windbite_buff = Debuffs.Stormbite;
-                    }
-                    var buff1 = FindTargetEffect(windbite_buff);
                     if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
                     {
                         return windbite;
                     }
 
                     // 毒咬箭 / 烈毒咬箭
-                    var venomousBite = OriginalHook(VenomousBite);
-                    var venomousBite_buff = Debuffs.VenomousBite;
-                    if (venomousBite != VenomousBite)
-                    {
-                        venomousBite_buff = Debuffs.CausticBite;
-                    }
-                    var buff2 = FindTargetEffect(venomousBite_buff);
                     if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite_buff))
                     {
                         return venomousBite;
@@ -1030,6 +1068,130 @@ namespace XIVSlothCombo.Combos.PvE
                 }
 
                 return actionID;
+            }
+
+            // 起手爆发
+            protected uint StartBurst(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                BRDGauge? gauge = GetJobGauge<BRDGauge>();
+                bool canWeave = CanWeave(actionID);
+
+                // 风蚀箭 / 狂风蚀箭
+                var windbite = OriginalHook(Windbite);
+                var windbite_buff = Debuffs.Windbite;
+                if (windbite != Windbite)
+                {
+                    windbite_buff = Debuffs.Stormbite;
+                }
+                var buff1 = FindTargetEffect(windbite_buff);
+                if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
+                {
+                    return windbite;
+                }
+
+                // 放浪神的小步舞曲
+                if (canWeave && ActionReady(WanderersMinuet) && (gauge.Song == Song.NONE || gauge.SongTimer < 3000 ||
+                    gauge.Song == Song.MAGE && gauge.SongTimer < 10000) &&
+                    !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
+                {
+                    return WanderersMinuet;
+                }
+
+                // 猛者强击
+                if (canWeave && ActionReady(RagingStrikes))
+                {
+                    return RagingStrikes;
+                }
+
+                // 毒咬箭 / 烈毒咬箭
+                var venomousBite = OriginalHook(VenomousBite);
+                var venomousBite_buff = Debuffs.VenomousBite;
+                if (venomousBite != VenomousBite)
+                {
+                    venomousBite_buff = Debuffs.CausticBite;
+                }
+                var buff2 = FindTargetEffect(venomousBite_buff);
+                if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite_buff))
+                {
+                    return venomousBite;
+                }
+
+                // 九天连箭
+                if (canWeave && ActionReady(EmpyrealArrow))
+                {
+                    return EmpyrealArrow;
+                }
+
+                // 失血箭
+                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && WasLastAbility(EmpyrealArrow))
+                {
+                    return Bloodletter;
+                }
+
+                // 光明神的最终乐章
+                if (canWeave && ActionReady(RadiantFinale) && Array.Exists(gauge.Coda, SongIsWandererMinuet))
+                {
+                    return RadiantFinale;
+                }
+
+                // 战斗之声
+                if (canWeave && ActionReady(BattleVoice) && gauge.Song != Song.NONE)
+                {
+                    return BattleVoice;
+                }
+
+                // 完美音调
+                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
+                {
+                    return OriginalHook(WanderersMinuet);
+                }
+
+                // 纷乱箭
+                if (canWeave && ActionReady(Barrage) && !HasEffect(Buffs.StraightShotReady))
+                {
+                    return Barrage;
+                }
+
+                // 侧风诱导箭
+                if (canWeave && ActionReady(Sidewinder))
+                {
+                    return Sidewinder;
+                }
+
+                // 失血箭
+                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && !WasLastAbility(Bloodletter))
+                {
+                    return Bloodletter;
+                }
+
+                // 伶牙俐齿
+                if (LevelChecked(IronJaws) && buff1 != null && buff2 != null &&
+                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || (WasLastAbility(EmpyrealArrow) && !WasLastAction(venomousBite))))
+                {
+                    return IronJaws;
+                }
+
+                // 完美音调
+                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0 && WasLastAction(IronJaws))
+                {
+                    return OriginalHook(WanderersMinuet);
+                }
+
+                // 直线射击 / 辉煌箭
+                var straightShot = OriginalHook(StraightShot);
+                if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady))
+                {
+                    return straightShot;
+                }
+
+                // 强力射击 / 爆发射击
+                return actionID;
+            }
+
+            // 中期爆发
+            protected uint MidTermBurst(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                return 0;
             }
         }
 
@@ -1105,13 +1267,13 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // 死亡箭雨
-                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath) && !JustUsed(RainOfDeath))
+                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath) && !WasLastAbility(RainOfDeath))
                         {
                             return RainOfDeath;
                         }
 
                         // 失血箭
-                        if (!LevelChecked(RainOfDeath) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
+                        if (!LevelChecked(RainOfDeath) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !WasLastAbility(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -1129,13 +1291,13 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // 死亡箭雨
-                        if (ActionReady(RainOfDeath) && !JustUsed(RainOfDeath))
+                        if (ActionReady(RainOfDeath) && !WasLastAbility(RainOfDeath))
                         {
                             return RainOfDeath;
                         }
 
                         // 失血箭
-                        if (!LevelChecked(RainOfDeath) && ActionReady(Bloodletter) && !JustUsed(Bloodletter))
+                        if (!LevelChecked(RainOfDeath) && ActionReady(Bloodletter) && !WasLastAbility(Bloodletter))
                         {
                             return Bloodletter;
                         }
