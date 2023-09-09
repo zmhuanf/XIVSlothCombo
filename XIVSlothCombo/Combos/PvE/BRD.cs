@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -870,15 +871,26 @@ namespace XIVSlothCombo.Combos.PvE
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Test;
 
             protected string TimePoint = "";
+            protected float GCD;
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID is HeavyShot or BurstShot)
                 {
                     //Dalamud.Logging.PluginLog.Warning($"LastAction:{GetActionName(ActionWatching.LastAction)} -- LastAbility:{GetActionName(ActionWatching.LastAbility)} -- LastWeaponskill:{GetActionName(ActionWatching.LastWeaponskill)} -- LastSpell:{GetActionName(ActionWatching.LastSpell)} -- lastComboMove:{GetActionName(lastComboMove)}");
+                    //Dalamud.Logging.PluginLog.Warning($"{GetCooldownElapsed(actionID)} -- {GetCooldownRemainingTime(actionID)}");
 
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
                     bool canWeave = CanWeave(actionID);
+                    var gcd = GetCooldownElapsed(actionID) + GetCooldownRemainingTime(actionID);
+                    if (gcd == 0)
+                    {
+                        gcd = GCD;
+                    }
+                    else
+                    {
+                        GCD = gcd;
+                    }
 
                     // 判断特殊时点
                     // 风debuff
@@ -899,18 +911,17 @@ namespace XIVSlothCombo.Combos.PvE
                     var buff2 = FindTargetEffect(venomousBite_buff);
 
                     // 起手爆发时点
-                    if (ActionReady(WanderersMinuet) && (gauge.Song == Song.NONE || gauge.SongTimer < 3000 ||
+                    if (ActionReady(WanderersMinuet) && ActionReady(RagingStrikes) && (gauge.Song == Song.NONE || gauge.SongTimer < 3000 ||
                         gauge.Song == Song.MAGE && gauge.SongTimer < 10000) &&
                         !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)) && buff1 == null && buff2 == null)
                     {
                         TimePoint = "起手爆发";
                     }
                     // 起手爆发时点结束
-                    if (TimePoint == "起手爆发" && WasLastAction(IronJaws) && (gauge.Repertoire == 0 || WasLastAbility(OriginalHook(WanderersMinuet))))
+                    if (TimePoint == "起手爆发" && !HasCharges(RagingStrikes) && !HasEffect(Buffs.RagingStrikes) && !JustUsed(RagingStrikes))
                     {
                         TimePoint = "";
                     }
-
 
                     // 根据时点进入特殊循环
                     var result = actionID;
@@ -996,7 +1007,7 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // 失血箭
-                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !WasLastAbility(Bloodletter))
+                        if (LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -1021,7 +1032,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                         // 失血箭
                         if (ActionReady(Bloodletter) && (GetRemainingCharges(Bloodletter) > GetMaxCharges(Bloodletter) - 2 ||
-                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !WasLastAbility(Bloodletter))
+                            HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !JustUsed(Bloodletter))
                         {
                             return Bloodletter;
                         }
@@ -1078,6 +1089,15 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 BRDGauge? gauge = GetJobGauge<BRDGauge>();
                 bool canWeave = CanWeave(actionID);
+                var gcd = GetCooldownElapsed(actionID) + GetCooldownRemainingTime(actionID);
+                if (gcd == 0)
+                {
+                    gcd = GCD;
+                }
+                else
+                {
+                    GCD = gcd;
+                }
 
                 // 风蚀箭 / 狂风蚀箭
                 var windbite = OriginalHook(Windbite);
@@ -1119,6 +1139,12 @@ namespace XIVSlothCombo.Combos.PvE
                     return venomousBite;
                 }
 
+                // 完美音调
+                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
+                {
+                    return OriginalHook(WanderersMinuet);
+                }
+
                 // 九天连箭
                 if (canWeave && ActionReady(EmpyrealArrow))
                 {
@@ -1143,12 +1169,6 @@ namespace XIVSlothCombo.Combos.PvE
                     return BattleVoice;
                 }
 
-                // 完美音调
-                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
-                {
-                    return OriginalHook(WanderersMinuet);
-                }
-
                 // 纷乱箭
                 if (canWeave && ActionReady(Barrage) && !HasEffect(Buffs.StraightShotReady))
                 {
@@ -1161,15 +1181,14 @@ namespace XIVSlothCombo.Combos.PvE
                     return Sidewinder;
                 }
 
-                // 失血箭
-                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && !WasLastAbility(Bloodletter))
-                {
-                    return Bloodletter;
-                }
-
                 // 伶牙俐齿
-                if (LevelChecked(IronJaws) && buff1 != null && buff2 != null &&
-                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || (WasLastAbility(EmpyrealArrow) && !WasLastWeaponskill(venomousBite))))
+                if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && !WasLastWeaponskill(IronJaws) &&
+                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || GetBuffRemainingTime(Buffs.RagingStrikes) < gcd))
+                {
+                    return IronJaws;
+                }
+                if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && !WasLastWeaponskill(IronJaws) &&
+                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || (GetBuffRemainingTime(Buffs.RagingStrikes) < 2 * gcd && !HasEffect(Buffs.StraightShotReady))))
                 {
                     return IronJaws;
                 }
@@ -1178,6 +1197,12 @@ namespace XIVSlothCombo.Combos.PvE
                 if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0 && WasLastWeaponskill(IronJaws))
                 {
                     return OriginalHook(WanderersMinuet);
+                }
+
+                // 失血箭
+                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && !JustUsed(Bloodletter))
+                {
+                    return Bloodletter;
                 }
 
                 // 直线射击 / 辉煌箭
@@ -1196,146 +1221,201 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 return 0;
             }
-        }
 
-        // 常用技能翻译
-        // QuickNock 连珠箭 低等级AOE 18
-        // Ladonsbite 百首龙牙箭 高等级AOE 82
-        // WanderersMinuet 放浪神的小步舞曲 52
-        // MagesBallad 贤者的叙事谣 30
-        // ArmysPaeon 军神的赞美歌 40
-        // PitchPerfect 完美音调 52
-        // EmpyrealArrow 九天连箭 54
+            #region 可能的功能
+            //    public class GCDCalculatorData
+            //    {
+            //        public uint ActionID;
+            //        public int GCD;
+            //        public float GCDTime;
+            //        public uint LastAction;
+            //        public int LastActionCount;
+            //        public float ComboTime;
+            //    }
 
-        internal class BRD_Test_AOE : CustomCombo
-        {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Test_AOE;
+            //    public static class GCDCalculator
+            //    {
+            //        private static Hashtable datas = new();
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            //        public static void UpdateWatchPoint(string name, bool reset, uint actionID, float comboTime)
+            //        {
+            //            var data = (GCDCalculatorData)datas[name];
+            //            if (data == null || reset)
+            //            {
+            //                data = new GCDCalculatorData();
+            //                data.ActionID = actionID;
+            //                data.GCDTime = GetCooldownElapsed(actionID) + GetCooldownRemainingTime(actionID);
+            //                datas[name] = data;
+            //            }
+            //            if (!WasLastWeaponskill(data.LastAction))
+            //            {
+            //                data.LastAction = ActionWatching.LastWeaponskill;
+            //                data.LastActionCount = 1;
+            //                data.ComboTime = comboTime;
+            //                data.GCD++;
+            //                return;
+            //            }
+            //            if (ActionWatching.LastWeaponskill == ActionWatching.LastAction && data.LastActionCount != LastActionCounter())
+            //            {
+            //                data.LastActionCount = LastActionCounter();
+            //                data.GCD++;
+            //                return;
+            //            }
+            //            if (WasLastWeaponskill(data.LastAction))
+            //            {
+
+            //            }
+            //        }
+
+            //        public static int GetWatchPoint(string name)
+            //        {
+            //            var data = (GCDCalculatorData)datas[name];
+            //            return data == null ? 0 : data.GCD;
+            //        }
+
+            //    }
+            //}
+            #endregion
+
+            // 常用技能翻译
+            // QuickNock 连珠箭 低等级AOE 18
+            // Ladonsbite 百首龙牙箭 高等级AOE 82
+            // WanderersMinuet 放浪神的小步舞曲 52
+            // MagesBallad 贤者的叙事谣 30
+            // ArmysPaeon 军神的赞美歌 40
+            // PitchPerfect 完美音调 52
+            // EmpyrealArrow 九天连箭 54
+
+            internal class BRD_Test_AOE : CustomCombo
             {
-                if (actionID is Ladonsbite or QuickNock)
+                protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_Test_AOE;
+
+                protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
                 {
-                    BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID);
-
-                    // 能力技
-                    if (canWeave)
+                    if (actionID is Ladonsbite or QuickNock)
                     {
-                        // 完美音调
-                        if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && (gauge.Repertoire == 3 || gauge.SongTimer < 3000))
-                        {
-                            return OriginalHook(WanderersMinuet);
-                        }
+                        BRDGauge? gauge = GetJobGauge<BRDGauge>();
+                        bool canWeave = CanWeave(actionID);
 
-                        // 歌曲
-                        int songTimerInSeconds = gauge.SongTimer / 1000;
-                        bool songNone = gauge.Song == Song.NONE;
-
-                        if (songTimerInSeconds < 3 || songNone)
+                        // 能力技
+                        if (canWeave)
                         {
-                            if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
+                            // 完美音调
+                            if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && (gauge.Repertoire == 3 || gauge.SongTimer < 3000))
                             {
-                                return WanderersMinuet;
+                                return OriginalHook(WanderersMinuet);
                             }
-                            if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
+
+                            // 歌曲
+                            int songTimerInSeconds = gauge.SongTimer / 1000;
+                            bool songNone = gauge.Song == Song.NONE;
+
+                            if (songTimerInSeconds < 3 || songNone)
                             {
-                                // 用掉完美音调先
-                                if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
                                 {
-                                    return OriginalHook(WanderersMinuet);
+                                    return WanderersMinuet;
                                 }
-                                return MagesBallad;
-                            }
-                            if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
-                            {
-                                // 用掉完美音调先
-                                if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
                                 {
-                                    return OriginalHook(WanderersMinuet);
+                                    // 用掉完美音调先
+                                    if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                    {
+                                        return OriginalHook(WanderersMinuet);
+                                    }
+                                    return MagesBallad;
                                 }
-                                return ArmysPaeon;
+                                if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
+                                {
+                                    // 用掉完美音调先
+                                    if (LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0)
+                                    {
+                                        return OriginalHook(WanderersMinuet);
+                                    }
+                                    return ArmysPaeon;
+                                }
+                            }
+
+                            // 猛者强击
+                            if (ActionReady(RagingStrikes))
+                            {
+                                return RagingStrikes;
+                            }
+
+                            // 战斗之声
+                            if (ActionReady(BattleVoice) && gauge.Song != Song.NONE)
+                            {
+                                return BattleVoice;
+                            }
+
+                            // 死亡箭雨
+                            if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath) && !JustUsed(RainOfDeath))
+                            {
+                                return RainOfDeath;
+                            }
+
+                            // 失血箭
+                            if (!LevelChecked(RainOfDeath) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !JustUsed(Bloodletter))
+                            {
+                                return Bloodletter;
+                            }
+
+                            // 九天连箭
+                            if (ActionReady(EmpyrealArrow) && (gauge.Song != Song.MAGE || GetCooldownRemainingTime(RainOfDeath) > 7.5))
+                            {
+                                return EmpyrealArrow;
+                            }
+
+                            // 侧风诱导箭
+                            if (ActionReady(Sidewinder))
+                            {
+                                return Sidewinder;
+                            }
+
+                            // 死亡箭雨
+                            if (ActionReady(RainOfDeath) && !JustUsed(RainOfDeath))
+                            {
+                                return RainOfDeath;
+                            }
+
+                            // 失血箭
+                            if (!LevelChecked(RainOfDeath) && ActionReady(Bloodletter) && !JustUsed(Bloodletter))
+                            {
+                                return Bloodletter;
+                            }
+
+                            // 光明神的最终乐章
+                            if (ActionReady(RadiantFinale) && Array.TrueForAll(gauge.Coda, SongIsNotNone))
+                            {
+                                return RadiantFinale;
                             }
                         }
 
-                        // 猛者强击
-                        if (ActionReady(RagingStrikes))
+                        // 战技
+
+                        // 爆破箭
+                        if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
                         {
-                            return RagingStrikes;
+                            return BlastArrow;
                         }
 
-                        // 战斗之声
-                        if (ActionReady(BattleVoice) && gauge.Song != Song.NONE)
+                        // 绝峰箭
+                        if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
                         {
-                            return BattleVoice;
+                            return ApexArrow;
                         }
 
-                        // 死亡箭雨
-                        if (LevelChecked(RainOfDeath) && GetRemainingCharges(RainOfDeath) == GetMaxCharges(RainOfDeath) && !WasLastAbility(RainOfDeath))
+                        // 影噬箭
+                        if (LevelChecked(Shadowbite) && HasEffect(Buffs.ShadowbiteReady))
                         {
-                            return RainOfDeath;
+                            return Shadowbite;
                         }
 
-                        // 失血箭
-                        if (!LevelChecked(RainOfDeath) && GetRemainingCharges(Bloodletter) == GetMaxCharges(Bloodletter) && !WasLastAbility(Bloodletter))
-                        {
-                            return Bloodletter;
-                        }
-
-                        // 九天连箭
-                        if (ActionReady(EmpyrealArrow) && (gauge.Song != Song.MAGE || GetCooldownRemainingTime(RainOfDeath) > 7.5))
-                        {
-                            return EmpyrealArrow;
-                        }
-
-                        // 侧风诱导箭
-                        if (ActionReady(Sidewinder))
-                        {
-                            return Sidewinder;
-                        }
-
-                        // 死亡箭雨
-                        if (ActionReady(RainOfDeath) && !WasLastAbility(RainOfDeath))
-                        {
-                            return RainOfDeath;
-                        }
-
-                        // 失血箭
-                        if (!LevelChecked(RainOfDeath) && ActionReady(Bloodletter) && !WasLastAbility(Bloodletter))
-                        {
-                            return Bloodletter;
-                        }
-
-                        // 光明神的最终乐章
-                        if (ActionReady(RadiantFinale) && Array.TrueForAll(gauge.Coda, SongIsNotNone))
-                        {
-                            return RadiantFinale;
-                        }
+                        // 强力射击 / 爆发射击
+                        return actionID;
                     }
-
-                    // 战技
-
-                    // 爆破箭
-                    if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
-                    {
-                        return BlastArrow;
-                    }
-
-                    // 绝峰箭
-                    if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
-                    {
-                        return ApexArrow;
-                    }
-
-                    // 影噬箭
-                    if (LevelChecked(Shadowbite) && HasEffect(Buffs.ShadowbiteReady))
-                    {
-                        return Shadowbite;
-                    }
-
-                    // 强力射击 / 爆发射击
                     return actionID;
                 }
-                return actionID;
             }
         }
     }
