@@ -7,6 +7,7 @@ using Lumina.Excel.GeneratedSheets;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
+using XIVSlothCombo.Data;
 using static System.Net.Mime.MediaTypeNames;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
 
@@ -874,6 +875,8 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is HeavyShot or BurstShot)
                 {
+                    //Dalamud.Logging.PluginLog.Warning($"LastAction:{GetActionName(ActionWatching.LastAction)} -- LastAbility:{GetActionName(ActionWatching.LastAbility)} -- LastWeaponskill:{GetActionName(ActionWatching.LastWeaponskill)} -- LastSpell:{GetActionName(ActionWatching.LastSpell)} -- lastComboMove:{GetActionName(lastComboMove)}");
+
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
                     bool canWeave = CanWeave(actionID);
 
@@ -1033,7 +1036,7 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // ¶¾Ò§¼ý / ÁÒ¶¾Ò§¼ý
-                    if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite_buff))
+                    if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite))
                     {
                         return venomousBite;
                     }
@@ -1084,7 +1087,7 @@ namespace XIVSlothCombo.Combos.PvE
                     windbite_buff = Debuffs.Stormbite;
                 }
                 var buff1 = FindTargetEffect(windbite_buff);
-                if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
+                if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !WasLastWeaponskill(windbite))
                 {
                     return windbite;
                 }
@@ -1111,7 +1114,7 @@ namespace XIVSlothCombo.Combos.PvE
                     venomousBite_buff = Debuffs.CausticBite;
                 }
                 var buff2 = FindTargetEffect(venomousBite_buff);
-                if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite_buff))
+                if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite))
                 {
                     return venomousBite;
                 }
@@ -1123,7 +1126,7 @@ namespace XIVSlothCombo.Combos.PvE
                 }
 
                 // Ê§Ñª¼ý
-                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && WasLastAbility(EmpyrealArrow))
+                if (canWeave && LevelChecked(Bloodletter) && GetRemainingCharges(Bloodletter) > 0 && WasLastAbility(EmpyrealArrow) && WasLastWeaponskill(venomousBite))
                 {
                     return Bloodletter;
                 }
@@ -1166,13 +1169,13 @@ namespace XIVSlothCombo.Combos.PvE
 
                 // ÁæÑÀÀþ³Ý
                 if (LevelChecked(IronJaws) && buff1 != null && buff2 != null &&
-                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || (WasLastAbility(EmpyrealArrow) && !WasLastAction(venomousBite))))
+                    (buff1.RemainingTime < 4 || buff2.RemainingTime < 4 || (WasLastAbility(EmpyrealArrow) && !WasLastWeaponskill(venomousBite))))
                 {
                     return IronJaws;
                 }
 
                 // ÍêÃÀÒôµ÷
-                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0 && WasLastAction(IronJaws))
+                if (canWeave && LevelChecked(PitchPerfect) && gauge.Song == Song.WANDERER && gauge.Repertoire > 0 && WasLastWeaponskill(IronJaws))
                 {
                     return OriginalHook(WanderersMinuet);
                 }
