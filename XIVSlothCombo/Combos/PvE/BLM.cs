@@ -173,6 +173,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Flare)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     // Handle movement
                     if (IsEnabled(CustomComboPreset.BLM_Simple_CastMovement) && InCombat())
                     {
@@ -331,6 +336,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Scathe)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     var canWeave = CanSpellWeave(actionID);
                     var currentMP = LocalPlayer.CurrentMp;
                     var astralFireRefresh = PluginConfiguration.GetCustomFloatValue(Config.BLM_AstralFireRefresh) * 1000;
