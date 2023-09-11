@@ -283,6 +283,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID == SpreadShot || actionID == Scattergun)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     var canWeave = CanWeave(actionID);
                     var gauge = GetJobGauge<MCHGauge>();
                     var battery = GetJobGauge<MCHGauge>().Battery;
@@ -473,6 +478,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is SplitShot or HeatedSplitShot)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     var inCombat = InCombat();
                     var gauge = GetJobGauge<MCHGauge>();
 

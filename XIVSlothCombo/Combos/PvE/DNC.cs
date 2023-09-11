@@ -390,6 +390,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Cascade)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     #region Types
                     DNCGauge? gauge = GetJobGauge<DNCGauge>();
                     bool flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
@@ -565,6 +570,11 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is Windmill)
                 {
+                    if (CurrentTarget == null)
+                    {
+                        return actionID;
+                    }
+
                     #region Types
                     DNCGauge? gauge = GetJobGauge<DNCGauge>();
                     bool flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
