@@ -994,10 +994,15 @@ namespace XIVSlothCombo.Combos.PvE
                         }
 
                         // 猛者强击
+                        if (ActionReady(RagingStrikes) && gauge.Song == Song.ARMY && gauge.SongTimer < 5000)
+                        {
+                            goto GotoRagingStrikes;
+                        }
                         if (ActionReady(RagingStrikes))
                         {
                             return RagingStrikes;
                         }
+                        GotoRagingStrikes:
 
                         // 战斗之声
                         if (ActionReady(BattleVoice) && gauge.Song != Song.NONE)
