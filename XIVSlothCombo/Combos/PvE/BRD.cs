@@ -1091,10 +1091,55 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // 绝峰箭
-                    if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
+                    var buffRagingStrikes = FindEffect(Buffs.RagingStrikes);
+                    var buffRadiantFinale = FindEffect(Buffs.RadiantFinale);
+                    if (LevelChecked(ApexArrow))
                     {
-                        return ApexArrow;
+                        // 如果猛者强击快好了，等等强者cd
+                        if (GetCooldownRemainingTime(RagingStrikes) <= 15 && gauge.SoulVoice == 100)
+                        {
+                            goto GotoApexArrow;
+                        }
+                        if (LevelChecked(RadiantFinale))
+                        {
+                            // 90级了
+                            // buff全到，直接放
+                            if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale != null)
+                            {
+                                return ApexArrow;
+                            }
+                            // 不等光明神了
+                            if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale == null && GetCooldownRemainingTime(RadiantFinale) > buffRagingStrikes.RemainingTime - 10)
+                            {
+                                return ApexArrow;
+                            }
+                            // buff要结束了，高于80直接放
+                            if (buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                            {
+                                return ApexArrow;
+                            }
+                        }
+                        else
+                        {
+                            // 没有90级
+                            // buff全到，直接放
+                            if (gauge.SoulVoice == 100 && buffRagingStrikes != null)
+                            {
+                                return ApexArrow;
+                            }
+                            // buff要结束了，高于80直接放
+                            if (buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                            {
+                                return ApexArrow;
+                            }
+                        }
+                        // 猛者强击cd还早，先放了
+                        if (GetCooldownRemainingTime(RagingStrikes) > 15 && gauge.SoulVoice == 100)
+                        {
+                            return ApexArrow;
+                        }
                     }
+                    GotoApexArrow:
 
                     // 直线射击 / 辉煌箭
                     if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady))
