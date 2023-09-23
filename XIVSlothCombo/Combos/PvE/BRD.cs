@@ -1119,7 +1119,7 @@ namespace XIVSlothCombo.Combos.PvE
                             // 等等光明神
                             if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale == null && GetCooldownRemainingTime(RadiantFinale) < buffRagingStrikes.RemainingTime - 10)
                             {
-                                return ApexArrow;
+                                goto GotoApexArrow;
                             }
                             // buff要结束了，高于80直接放
                             if (buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
