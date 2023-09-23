@@ -1114,6 +1114,11 @@ namespace XIVSlothCombo.Combos.PvE
                             // buff全到，直接放
                             if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale != null)
                             {
+                                // 稍微等一等战斗之声吧
+                                if (!HasEffect(Buffs.BattleVoice) && GetCooldownRemainingTime(BattleVoice) < 4 && buffRagingStrikes.RemainingTime > 12 && buffRadiantFinale.RemainingTime > 12)
+                                {
+                                    goto GotoApexArrow;
+                                }
                                 return ApexArrow;
                             }
                             // 等等光明神
@@ -1317,6 +1322,11 @@ namespace XIVSlothCombo.Combos.PvE
                         // buff全到，直接放
                         if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale != null)
                         {
+                            // 稍微等一等战斗之声吧
+                            if (!HasEffect(Buffs.BattleVoice) && GetCooldownRemainingTime(BattleVoice) < 4 && buffRagingStrikes.RemainingTime > 12 && buffRadiantFinale.RemainingTime > 12)
+                            {
+                                goto GotoApexArrow;
+                            }
                             return ApexArrow;
                         }
                         // 等等光明神
