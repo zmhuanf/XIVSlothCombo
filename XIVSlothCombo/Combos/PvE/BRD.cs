@@ -1096,7 +1096,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (LevelChecked(ApexArrow))
                     {
                         // 如果猛者强击快好了，等等强者cd
-                        if (GetCooldownRemainingTime(RagingStrikes) <= 15 && gauge.SoulVoice == 100)
+                        if (gauge.SoulVoice == 100 && GetCooldownRemainingTime(RagingStrikes) <= 15)
                         {
                             goto GotoApexArrow;
                         }
@@ -1114,7 +1114,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 return ApexArrow;
                             }
                             // buff要结束了，高于80直接放
-                            if (buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                            if (buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
                             {
                                 return ApexArrow;
                             }
@@ -1128,13 +1128,13 @@ namespace XIVSlothCombo.Combos.PvE
                                 return ApexArrow;
                             }
                             // buff要结束了，高于80直接放
-                            if (buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                            if (buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
                             {
                                 return ApexArrow;
                             }
                         }
                         // 猛者强击cd还早，先放了
-                        if (GetCooldownRemainingTime(RagingStrikes) > 15 && gauge.SoulVoice == 100)
+                        if (gauge.SoulVoice == 100 && GetCooldownRemainingTime(RagingStrikes) > 15)
                         {
                             return ApexArrow;
                         }
