@@ -1058,7 +1058,10 @@ namespace XIVSlothCombo.Combos.PvE
                         if (ActionReady(Bloodletter) && (GetRemainingCharges(Bloodletter) > GetMaxCharges(Bloodletter) - 2 ||
                             HasEffect(Buffs.RagingStrikes) || HasEffect(Buffs.BattleVoice)) && !JustUsed(Bloodletter))
                         {
-                            return Bloodletter;
+                            if (!(gauge.Song == Song.ARMY && gauge.SongTimer < 10000))
+                            {
+                                return Bloodletter;
+                            }
                         }
                     }
 
