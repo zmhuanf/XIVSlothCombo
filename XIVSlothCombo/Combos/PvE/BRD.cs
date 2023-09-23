@@ -1035,7 +1035,7 @@ namespace XIVSlothCombo.Combos.PvE
                             }
                             return Barrage;
                         }
-                        GotoBarrage:
+                    GotoBarrage:
 
                         // 九天连箭
                         if (ActionReady(EmpyrealArrow) && (gauge.Song != Song.MAGE || GetCooldownRemainingTime(RainOfDeath) > 7.5))
@@ -1108,8 +1108,8 @@ namespace XIVSlothCombo.Combos.PvE
                             {
                                 return ApexArrow;
                             }
-                            // 不等光明神了
-                            if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale == null && GetCooldownRemainingTime(RadiantFinale) > buffRagingStrikes.RemainingTime - 10)
+                            // 等等光明神
+                            if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale == null && GetCooldownRemainingTime(RadiantFinale) < buffRagingStrikes.RemainingTime - 10)
                             {
                                 return ApexArrow;
                             }
@@ -1139,7 +1139,7 @@ namespace XIVSlothCombo.Combos.PvE
                             return ApexArrow;
                         }
                     }
-                    GotoApexArrow:
+                GotoApexArrow:
 
                     // 直线射击 / 辉煌箭
                     if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady))
@@ -1280,6 +1280,63 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     return Bloodletter;
                 }
+
+                // 爆破箭
+                if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
+                {
+                    return BlastArrow;
+                }
+
+                // 绝峰箭
+                var buffRagingStrikes = FindEffect(Buffs.RagingStrikes);
+                var buffRadiantFinale = FindEffect(Buffs.RadiantFinale);
+                if (LevelChecked(ApexArrow))
+                {
+                    // 如果猛者强击快好了，等等强者cd
+                    if (gauge.SoulVoice == 100 && GetCooldownRemainingTime(RagingStrikes) <= 15)
+                    {
+                        goto GotoApexArrow;
+                    }
+                    if (LevelChecked(RadiantFinale))
+                    {
+                        // 90级了
+                        // buff全到，直接放
+                        if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale != null)
+                        {
+                            return ApexArrow;
+                        }
+                        // 等等光明神
+                        if (gauge.SoulVoice == 100 && buffRagingStrikes != null && buffRadiantFinale == null && GetCooldownRemainingTime(RadiantFinale) < buffRagingStrikes.RemainingTime - 10)
+                        {
+                            goto GotoApexArrow;
+                        }
+                        // buff要结束了，高于80直接放
+                        if (buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                        {
+                            return ApexArrow;
+                        }
+                    }
+                    else
+                    {
+                        // 没有90级
+                        // buff全到，直接放
+                        if (gauge.SoulVoice == 100 && buffRagingStrikes != null)
+                        {
+                            return ApexArrow;
+                        }
+                        // buff要结束了，高于80直接放
+                        if (buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 3 * gcd && gauge.SoulVoice >= 80)
+                        {
+                            return ApexArrow;
+                        }
+                    }
+                    // 猛者强击cd还早，先放了
+                    if (gauge.SoulVoice == 100 && GetCooldownRemainingTime(RagingStrikes) > 15)
+                    {
+                        return ApexArrow;
+                    }
+                }
+                GotoApexArrow:
 
                 // 直线射击 / 辉煌箭
                 var straightShot = OriginalHook(StraightShot);
