@@ -1148,6 +1148,12 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // ÁæÑÀÀþ³Ý
+                    if (LevelChecked(IronJaws) &&
+                        buffRagingStrikes != null && buffRagingStrikes.RemainingTime < 4 &&
+                        buff1 != null && buff2 != null && (buff1.RemainingTime < 29 || buff2.RemainingTime < 29) && !WasLastWeaponskill(IronJaws))
+                    {
+                        return IronJaws;
+                    }
                     if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 + gcd || buff2.RemainingTime < 4 + gcd) && !WasLastWeaponskill(IronJaws))
                     {
                         return IronJaws;
