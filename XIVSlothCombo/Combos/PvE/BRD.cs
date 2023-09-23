@@ -1020,8 +1020,22 @@ namespace XIVSlothCombo.Combos.PvE
                         // 纷乱箭
                         if (ActionReady(Barrage) && !HasEffect(Buffs.StraightShotReady))
                         {
+                            // 不需要补毒的时候才用
+                            if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
+                            {
+                                goto GotoBarrage;
+                            }
+                            if (LevelChecked(venomousBite) && (!TargetHasEffect(venomousBite_buff) || !LevelChecked(IronJaws) && buff2.RemainingTime < 4) && !JustUsed(venomousBite))
+                            {
+                                goto GotoBarrage;
+                            }
+                            if (LevelChecked(IronJaws) && buff1 != null && buff2 != null && (buff1.RemainingTime < 4 || buff2.RemainingTime < 4) && !WasLastWeaponskill(IronJaws))
+                            {
+                                goto GotoBarrage;
+                            }
                             return Barrage;
                         }
+                        GotoBarrage:
 
                         // 九天连箭
                         if (ActionReady(EmpyrealArrow) && (gauge.Song != Song.MAGE || GetCooldownRemainingTime(RainOfDeath) > 7.5))
@@ -1044,6 +1058,13 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // 战技
+
+                    // 直线射击 / 辉煌箭
+                    var straightShot = OriginalHook(StraightShot);
+                    if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady) && HasEffect(Buffs.Barrage))
+                    {
+                        return straightShot;
+                    }
 
                     // 风蚀箭 / 狂风蚀箭
                     if (LevelChecked(windbite) && (!TargetHasEffect(windbite_buff) || !LevelChecked(IronJaws) && buff1.RemainingTime < 4) && !JustUsed(windbite))
@@ -1076,7 +1097,6 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     // 直线射击 / 辉煌箭
-                    var straightShot = OriginalHook(StraightShot);
                     if (LevelChecked(straightShot) && HasEffect(Buffs.StraightShotReady))
                     {
                         return straightShot;
